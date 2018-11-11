@@ -1,12 +1,11 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
-import Layout from '../components/layout'
+import Layout from 'src/components/layout'
 
 const IndexPage = () => (
   <Layout>
-    <h1>Product List</h1>
-    <ProductList />
+    <Link to="/products/">Go to Products page</Link>
   </Layout>
 )
 

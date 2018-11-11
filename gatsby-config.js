@@ -7,8 +7,10 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-react-helmet',
-    'gatsby-transformer-sharp',
+    'gatsby-plugin-root-import',
+    'gatsby-plugin-lodash',
     'gatsby-plugin-sharp',
+    'gatsby-transformer-sharp',
     {
       resolve: 'gatsby-plugin-apollo-boost',
       options: {

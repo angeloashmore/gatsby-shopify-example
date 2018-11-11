@@ -1,7 +1,32 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+const path = require('path')
+const { forEach, compose, get, map } = require('lodash/fp')
 
-// You can delete this file if you're not using it
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions
+
+  const result = await graphql(`
+    {
+      allShopifyProduct {
+        edges {
+          node {
+            id
+            handle
+          }
+        }
+      }
+    }
+  `)
+
+  compose(
+    forEach(createPage),
+    map(x => ({
+      path: `/products/${get('handle', x)}/`,
+      component: path.resolve('./src/templates/product.js'),
+      context: {
+        id: get('id', x),
+      },
+    })),
+    map('node'),
+    get('data.allShopifyProduct.edges')
+  )(result)
+}
