@@ -11,7 +11,7 @@ const ProductTemplate = ({ data }) => {
   return (
     <Layout>
       <p>
-        <Link to="/products">Go to all products</Link>
+        <Link to="/products/">Go to all products</Link>
       </p>
       <h2>{get('title', product)}</h2>
       <h3>Description</h3>

@@ -1,5 +1,8 @@
 import React from 'react'
 import { Link } from 'gatsby'
+import gql from 'graphql-tag'
+import { Query } from 'react-apollo'
+import { get, cond, T, always } from 'lodash/fp'
 
 const Header = ({ siteTitle }) => (
   <div
@@ -26,6 +29,38 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </Link>
       </h1>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/products/">Products</Link>
+          </li>
+          <li>
+            <Link to="/sign-in/">Sign In</Link>
+          </li>
+        </ul>
+      </nav>
+      <dl>
+        <dt>customerAccessToken</dt>
+        <dd>
+          <Query
+            query={gql`
+              query {
+                customerAccessToken @client
+              }
+            `}
+          >
+            {cond([
+              [get('loading'), always('Loading...')],
+              [get('error'), always('An error occurred!')],
+              [
+                get('data.customerAccessToken'),
+                get('data.customerAccessToken'),
+              ],
+              [T, always('Not signed in')],
+            ])}
+          </Query>
+        </dd>
+      </dl>
     </div>
   </div>
 )
