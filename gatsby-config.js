@@ -1,5 +1,9 @@
-const shopName = 'hokulani-bake-shop'
-const accessToken = 'd7675449a3457fdf3a8f615fbdb2336b'
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
+const shopName = process.env.SHOPIFY_SHOP_NAME
+const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
 
 module.exports = {
   siteMetadata: {
