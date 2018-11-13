@@ -12,6 +12,38 @@ Shopify in two stages:
 This allows us to build a fully-featured e-commerce website using a standard
 Gatsby/React workflow.
 
+## Benefits
+
+- **Speed**
+
+  This method benefits from all the speed enhancements provided by static sites
+  and Gatsby.
+
+- **Portability**
+
+  The website can be hosted anywhere. Netlify is preferred for to its
+  static-site-focused product, but any Continuous Integration and web server
+  can serve the website.
+
+- **Single codebase**
+
+  A single project contains both marketing and e-commerce pages with shared
+  code. Unlike a typical Shopify experience, marketing content can be managed
+  with other CMS services, like Prismic or Contentful, while product and
+  inventory data is managed by Shopify. Data from both services are combined
+  into one seamless experience from a developer and end-user experience.
+
+- **Scalability**
+
+  Due to the static nature of a static site, minimal resources are necessary to
+  run the website. Shopify does not need to render each page on its servers.
+
+- **Gatsby/React**
+
+  The benefits of Gatsby and React will not be listed here as there are many
+  other resources for that information, but they are tremendously helpful in
+  creating a modern site quickly and cleanly.
+
 ## Considerations
 
 - **SEO**
