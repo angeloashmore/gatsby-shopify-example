@@ -35,7 +35,7 @@ Please feel free to open an issue with any suggestions to improve this example!
   code. Unlike a typical Shopify experience, marketing content can be managed
   with other CMS services, like Prismic or Contentful, while product and
   inventory data is managed by Shopify. Data from both services are combined
-  into one seamless experience from a developer and end-user experience.
+  into one seamless experience from both a developer and end-user perspective.
 
 - **Scalability**
 
