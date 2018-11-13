@@ -1,6 +1,6 @@
 # gatsby-shopify-example
 
-Example Gatsby website with Shopify integration. This pulls data in from
+Example Gatsby website with Shopify integration. This pulls in data from
 Shopify in two stages:
 
 - **Build Time**: All product data is fetched at build time to generate product
