@@ -77,3 +77,36 @@ Gatsby/React workflow.
   exactly for the purpose of this website.
 
   Changes to the API are well documented in the documentation and GraphQL API.
+
+## Technologies
+
+The following technologies (i.e. libraries, frameworks) are used in this
+example.
+
+- Gatsby
+- React
+- GraphQL
+- Apollo (via `apollo-boost`)
+
+`gatsby-source-shopify` is used to gather product information at build time.
+This eventually can be replaced with the more generic `gatsby-source-graphql`
+once `gatsby-image` processing and pagination issues are sorted.
+
+## Sitemap
+
+The following serves as a reference to the pages necessary for an e-commerce
+website. This project aims to provide an example for each page.
+
+- Home
+- About
+- Products (paginated)
+  - Collections (paginated)
+  - Individual Product
+- Cart (guest and authenticated)
+- Sign In
+- Sign Up
+- Forgot Password
+- Account (authenticated)
+  - Orders (paginated)
+  - Addresses
+  - Sign Out
