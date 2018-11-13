@@ -7,7 +7,7 @@ const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
 
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
+    title: 'Gatsby Shopify Example',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
