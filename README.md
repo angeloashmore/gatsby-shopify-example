@@ -12,6 +12,10 @@ Shopify in two stages:
 This allows us to build a fully-featured e-commerce website using a standard
 Gatsby/React workflow.
 
+**Status**: Still planning and experimenting. Incomplete.
+
+Please feel free to open an issue with any suggestions to improve this example!
+
 ## Benefits
 
 - **Speed**
