@@ -1,50 +1,55 @@
 import React from 'react'
 import { StaticQuery, graphql, Link } from 'gatsby'
-import { Query } from 'react-apollo'
-import { get, cond, T, always } from 'lodash/fp'
+import { get } from 'lodash/fp'
 
-import { GET_CUSTOMER_ACCESS_TOKEN } from 'src/queries'
+import { Flex, Box, Heading, Text } from 'src/components/system'
 import { Authenticated } from 'src/components/Authenticated'
 
+const NavItem = ({ to, children, ...props }) => (
+  <Box
+    as="li"
+    display="inline-block"
+    mr={[2, 3]}
+    boxStyle="lastNoMargin"
+    {...props}
+  >
+    <Text as={Link} to={to} fontSize={['small', 'medium']}>
+      {children}
+    </Text>
+  </Box>
+)
+
 const render = props => queryData => (
-  <header {...props}>
-    <h1>
+  <Flex
+    as="header"
+    alignItems={[null, 'center']}
+    borderBottom="2px solid"
+    borderColor="black"
+    flexDirection={['column', 'row']}
+    justifyContent="space-between"
+    mb={[2, 3]}
+    pb={[2, 3]}
+    {...props}
+  >
+    <Heading as="h1" fontSize="large" fontWeight="normal" mb={[1, 0]}>
       <Link to="/">{get('site.siteMetadata.title', queryData)}</Link>
-    </h1>
-    <nav>
-      <ul>
-        <li>
-          <Link to="/products/">Products</Link>
-        </li>
+    </Heading>
+    <Flex as="nav">
+      <Box as="ul">
+        <NavItem to="/">Home</NavItem>
+        <NavItem to="/products/">Products</NavItem>
         <Authenticated>
           {({ isAuthenticated }) =>
             isAuthenticated ? (
-              <li>
-                <Link to="/">Sign Out</Link>
-              </li>
+              <NavItem to="/">Sign Out</NavItem>
             ) : (
-              <li>
-                <Link to="/sign-in/">Sign In</Link>
-              </li>
+              <NavItem to="/sign-in/">Sign In</NavItem>
             )
           }
         </Authenticated>
-      </ul>
-    </nav>
-    <dl>
-      <dt>customerAccessToken</dt>
-      <dd>
-        <Query query={GET_CUSTOMER_ACCESS_TOKEN}>
-          {cond([
-            [get('loading'), always('Loading...')],
-            [get('error'), always('An error occurred!')],
-            [get('data.customerAccessToken'), get('data.customerAccessToken')],
-            [T, always('Not signed in')],
-          ])}
-        </Query>
-      </dd>
-    </dl>
-  </header>
+      </Box>
+    </Flex>
+  </Flex>
 )
 
 export const Header = props => (

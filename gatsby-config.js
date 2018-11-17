@@ -14,6 +14,7 @@ module.exports = {
     'gatsby-plugin-root-import',
     'gatsby-plugin-lodash',
     'gatsby-plugin-sharp',
+    'gatsby-plugin-styled-components',
     'gatsby-transformer-sharp',
     {
       resolve: 'gatsby-plugin-apollo-boost',
