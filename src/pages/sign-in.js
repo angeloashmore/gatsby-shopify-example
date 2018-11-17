@@ -1,25 +1,10 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
 import { get, isEmpty } from 'lodash/fp'
 
-import Layout from 'src/components/layout'
+import { SIGN_IN } from 'src/queries'
+import { Layout } from 'src/components/Layout'
 import { SignInForm } from 'src/components/SignInForm'
-
-const SIGN_IN = gql`
-  mutation($input: CustomerAccessTokenCreateInput!) {
-    customerAccessTokenCreate(input: $input) {
-      userErrors {
-        field
-        message
-      }
-      customerAccessToken {
-        accessToken
-        expiresAt
-      }
-    }
-  }
-`
 
 const SignInPage = () => (
   <Layout>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, graphql } from 'gatsby'
 import { get, map } from 'lodash/fp'
 
-import Layout from 'src/components/layout'
+import { Layout } from 'src/components/Layout'
 import { ProductVariant } from 'src/components/ProductVariant'
 
 const ProductTemplate = ({ data }) => {

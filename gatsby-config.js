@@ -22,11 +22,6 @@ module.exports = {
         headers: {
           'X-Shopify-Storefront-Access-Token': accessToken,
         },
-        clientState: {
-          defaults: {
-            customerAccessToken: null,
-          },
-        },
       },
     },
     {

@@ -1,26 +1,9 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import { compose, get, find, cond, T, always, negate } from 'lodash/fp'
 
+import { GET_PRODUCT } from 'src/queries'
 import { nodes } from 'src/helpers'
-
-const GET_PRODUCT = gql`
-  query($handle: String!) {
-    shop {
-      productByHandle(handle: $handle) {
-        variants(first: 250) {
-          edges {
-            node {
-              id
-              availableForSale
-            }
-          }
-        }
-      }
-    }
-  }
-`
 
 const LiveProductAvailability = ({ productHandle, variantId, children }) => {
   const getAvailableForSale = compose(
