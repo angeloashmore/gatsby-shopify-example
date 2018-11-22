@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, StaticQuery, graphql } from 'gatsby'
+import { StaticQuery, graphql } from 'gatsby'
 import { get, map, compose } from 'lodash/fp'
 
 import { nodes } from 'src/helpers'
+import { Product } from 'src/components/Product'
 
 const render = props => queryData => {
   const products = compose(
@@ -14,11 +15,14 @@ const render = props => queryData => {
     <ul {...props}>
       {map(
         product => (
-          <li key={get('id', product)}>
-            <Link to={`/products/${get('handle', product)}/`}>
-              {get('title', product)}
-            </Link>
-          </li>
+          <Product
+            key={get('id', product)}
+            title={get('title', product)}
+            descriptionHtml={get('descriptionHtml', product)}
+            to={`/products/${get('handle', product)}/`}
+            mb={2}
+            boxStyle="lastNoMargin"
+          />
         ),
         products
       )}
@@ -34,8 +38,9 @@ export const ProductList = props => (
           edges {
             node {
               id
-              title
               handle
+              title
+              descriptionHtml
             }
           }
         }

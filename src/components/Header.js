@@ -1,9 +1,12 @@
 import React from 'react'
-import { StaticQuery, graphql, Link } from 'gatsby'
+import { StaticQuery, graphql } from 'gatsby'
+import { Query } from 'react-apollo'
 import { get } from 'lodash/fp'
 
+import { GET_CUSTOMER } from 'src/queries'
 import { Flex, Box, Heading, Text } from 'src/components/system'
-import { Authenticated } from 'src/components/Authenticated'
+import { CustomerQuery } from 'src/components/CustomerQuery'
+import { Link } from 'src/components/Link'
 
 const NavItem = ({ to, children, ...props }) => (
   <Box
@@ -22,7 +25,7 @@ const NavItem = ({ to, children, ...props }) => (
 const render = props => queryData => (
   <Flex
     as="header"
-    alignItems={[null, 'center']}
+    alignItems={[null, 'flex-end']}
     borderBottom="2px solid"
     borderColor="black"
     flexDirection={['column', 'row']}
@@ -38,15 +41,24 @@ const render = props => queryData => (
       <Box as="ul">
         <NavItem to="/">Home</NavItem>
         <NavItem to="/products/">Products</NavItem>
-        <Authenticated>
-          {({ isAuthenticated }) =>
+        <CustomerQuery>
+          {({ isAuthenticated, customerAccessToken }) =>
             isAuthenticated ? (
-              <NavItem to="/">Sign Out</NavItem>
+              <>
+                <NavItem to="/account/">Account</NavItem>
+                <Query query={GET_CUSTOMER} variables={{ customerAccessToken }}>
+                  {({ data }) => (
+                    <NavItem to="/sign-out/">
+                      Sign Out ({get('customer.displayName', data)})
+                    </NavItem>
+                  )}
+                </Query>
+              </>
             ) : (
               <NavItem to="/sign-in/">Sign In</NavItem>
             )
           }
-        </Authenticated>
+        </CustomerQuery>
       </Box>
     </Flex>
   </Flex>

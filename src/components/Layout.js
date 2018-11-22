@@ -25,7 +25,7 @@ const render = ({ children }) => queryData => (
         fontFamily="sans"
         fontSize="medium"
         fontWeight="medium"
-        lineHeight="solid"
+        lineHeight="copy"
         p={[2, 4]}
       >
         <Header />

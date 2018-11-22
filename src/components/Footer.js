@@ -1,8 +1,9 @@
 import React from 'react'
-import { StaticQuery, graphql, Link } from 'gatsby'
+import { StaticQuery, graphql } from 'gatsby'
 import { get } from 'lodash/fp'
 
 import { Box, Flex, Text } from 'src/components/system'
+import { Link } from 'src/components/Link'
 
 const NavItem = ({ to, children, ...props }) => (
   <Box

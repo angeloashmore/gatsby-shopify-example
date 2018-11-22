@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, graphql } from 'gatsby'
+import { graphql } from 'gatsby'
 import { get, map } from 'lodash/fp'
 
 import { Layout } from 'src/components/Layout'
+import { Link } from 'src/components/Link'
 import { ProductVariant } from 'src/components/ProductVariant'
 
 const ProductTemplate = ({ data }) => {

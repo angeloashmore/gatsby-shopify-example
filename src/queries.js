@@ -37,3 +37,11 @@ export const SIGN_IN = gql`
     }
   }
 `
+
+export const GET_CUSTOMER = gql`
+  query($customerAccessToken: String!) {
+    customer(customerAccessToken: $customerAccessToken) {
+      displayName
+    }
+  }
+`
