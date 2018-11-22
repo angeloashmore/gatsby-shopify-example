@@ -41,6 +41,7 @@ const render = props => queryData => (
       <Box as="ul">
         <NavItem to="/">Home</NavItem>
         <NavItem to="/products/">Products</NavItem>
+        <NavItem to="/cart/">Cart</NavItem>
         <CustomerQuery>
           {({ isAuthenticated, customerAccessToken }) =>
             isAuthenticated ? (

@@ -1,0 +1,23 @@
+import React from 'react'
+
+import { Heading } from 'src/components/system'
+import { AccountNav } from 'src/components/AccountNav'
+import { CustomerQuery } from 'src/components/CustomerQuery'
+import { Layout } from 'src/components/Layout'
+import { Redirect } from 'src/components/Redirect'
+
+const AccountPage = ({ location }) => {
+  return (
+    <Layout>
+      <CustomerQuery>
+        {({ isAuthenticated }) =>
+          !isAuthenticated && <Redirect to="/sign-in/" />
+        }
+      </CustomerQuery>
+      <Heading>Account</Heading>
+      <AccountNav />
+    </Layout>
+  )
+}
+
+export default AccountPage
