@@ -3,7 +3,7 @@ import { graphql } from 'gatsby'
 import { get, map, compose } from 'lodash/fp'
 
 import { nodes } from 'src/helpers'
-import { Flex, Heading } from 'src/components/system'
+import { Flex, Heading, Text } from 'src/components/system'
 import { Layout } from 'src/components/Layout'
 import { Link } from 'src/components/Link'
 import { Product } from 'src/components/Product'
@@ -32,10 +32,23 @@ const ProductTemplate = ({ data, pageContext }) => {
       )}
       <Flex as="nav">
         {get('previousPagePath', pageContext) && (
-          <Link to={get('previousPagePath', pageContext)}>Previous</Link>
+          <Text
+            as={Link}
+            to={get('previousPagePath', pageContext)}
+            display="inline-block"
+            mr={2}
+          >
+            Previous
+          </Text>
         )}
         {get('nextPagePath', pageContext) && (
-          <Link to={get('nextPagePath', pageContext)}>Next</Link>
+          <Text
+            as={Link}
+            to={get('nextPagePath', pageContext)}
+            display="inline-block"
+          >
+            Next
+          </Text>
         )}
       </Flex>
     </Layout>

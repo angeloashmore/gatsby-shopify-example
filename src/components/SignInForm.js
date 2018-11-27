@@ -2,6 +2,9 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { object as yupObject, string as yupString } from 'yup'
 
+import { Flex, Text, Input } from 'src/components/system'
+import { Button } from 'src/components/Button'
+
 export const SignInForm = ({ onSubmit, ...props }) => (
   <Formik
     initialValues={{
@@ -18,23 +21,23 @@ export const SignInForm = ({ onSubmit, ...props }) => (
   >
     {({ isValid, isSubmitting }) => (
       <Form {...props}>
-        <div>
-          <label>
-            <span>Email</span>
-            <Field name="email" type="email" />
+        <Flex as="label" mb={2}>
+          <Text width="6rem">Email</Text>
+          <Input as={Field} name="email" type="email" />
+          <Text ml={2}>
             <ErrorMessage name="email" />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Password</span>
-            <Field name="password" type="password" />
+          </Text>
+        </Flex>
+        <Flex as="label" mb={2}>
+          <Text width="6rem">Password</Text>
+          <Input as={Field} name="password" type="password" />
+          <Text ml={2}>
             <ErrorMessage name="password" />
-          </label>
-        </div>
-        <button type="submit" disabled={!isValid || isSubmitting}>
+          </Text>
+        </Flex>
+        <Button type="submit" disabled={!isValid || isSubmitting} ml="6rem">
           Sign In
-        </button>
+        </Button>
       </Form>
     )}
   </Formik>
