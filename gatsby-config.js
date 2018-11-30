@@ -38,5 +38,6 @@ module.exports = {
         accessToken,
       },
     },
+    'gatsby-plugin-netlify',
   ],
 }

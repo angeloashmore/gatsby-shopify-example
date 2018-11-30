@@ -13,6 +13,7 @@
     "gatsby-plugin-create-client-paths": "^2.0.3",
     "gatsby-plugin-lodash": "^3.0.2",
     "gatsby-plugin-manifest": "^2.0.5",
+    "gatsby-plugin-netlify": "^2.0.6",
     "gatsby-plugin-offline": "^2.0.11",
     "gatsby-plugin-react-helmet": "^3.0.0",
     "gatsby-plugin-root-import": "^2.0.4",
