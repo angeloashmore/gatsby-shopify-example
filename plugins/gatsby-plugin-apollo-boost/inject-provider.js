@@ -5,12 +5,15 @@ import { persistCache } from 'apollo-cache-persist'
 import { ApolloProvider } from 'react-apollo'
 import { compose, merge, omit } from 'lodash/fp'
 
+import { isBrowser } from '../../src/helpers'
 import { clientState } from '../../src/state'
 
 export default ({ element }, options) => {
   const cache = new InMemoryCache()
 
-  persistCache({ cache, storage: window.localStorage })
+  // Skip cache persistence if not in the browser. This prevents the build from
+  // throwing an error since window does not exist on the server.
+  if (isBrowser) persistCache({ cache, storage: window.localStorage })
 
   const client = new ApolloClient(
     compose(
