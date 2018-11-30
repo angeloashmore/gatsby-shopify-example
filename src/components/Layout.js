@@ -1,7 +1,7 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { get } from 'lodash/fp'
 
 import { theme } from 'src/theme'
@@ -11,7 +11,24 @@ import { Footer } from 'src/components/Footer'
 
 import 'minireset.css'
 import 'inter-ui'
-import 'src/index.css'
+
+const GlobalStyle = createGlobalStyle`
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: ${p => p.theme.colors.cream};
+    overflow-x: hidden;
+  }
+
+  a {
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
 
 const render = ({ children }) => queryData => (
   <>
@@ -19,19 +36,22 @@ const render = ({ children }) => queryData => (
       <html lang="en" />
     </Helmet>
     <ThemeProvider theme={theme}>
-      <Text
-        as="div"
-        color="black"
-        fontFamily="sans"
-        fontSize="medium"
-        fontWeight="medium"
-        lineHeight="copy"
-        p={[2, 4]}
-      >
-        <Header />
-        <Box as="main">{children}</Box>
-        <Footer />
-      </Text>
+      <>
+        <GlobalStyle />
+        <Text
+          as="div"
+          color="black"
+          fontFamily="sans"
+          fontSize="medium"
+          fontWeight="medium"
+          lineHeight="copy"
+          p={[2, 4]}
+        >
+          <Header />
+          <Box as="main">{children}</Box>
+          <Footer />
+        </Text>
+      </>
     </ThemeProvider>
   </>
 )
