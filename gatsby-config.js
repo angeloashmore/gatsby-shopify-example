@@ -17,6 +17,12 @@ module.exports = {
     'gatsby-plugin-styled-components',
     'gatsby-transformer-sharp',
     {
+      resolve: 'gatsby-plugin-create-client-paths',
+      options: {
+        prefixes: ['/account/orders/*'],
+      },
+    },
+    {
       resolve: 'gatsby-plugin-apollo-boost',
       options: {
         uri: `https://${shopName}.myshopify.com/api/graphql`,
