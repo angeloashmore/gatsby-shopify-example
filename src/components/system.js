@@ -46,7 +46,6 @@ import {
 } from 'styled-system'
 import { prop } from 'lodash/fp'
 
-const css = prop('css')
 const clear = style({ prop: 'clear' })
 const cursor = style({ prop: 'cursor' })
 const fill = style({ prop: 'fill', key: 'colors' })
@@ -94,8 +93,7 @@ export const Box = styled.div(
   width,
   whiteSpace,
   zIndex,
-  boxStyle,
-  css
+  boxStyle
 )
 
 Box.defaultProps = {
