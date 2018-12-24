@@ -1,8 +1,13 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { graphql, Query } from 'react-apollo'
 import { compose, get, find, cond, T, always, negate } from 'lodash/fp'
 
-import { GET_PRODUCT } from 'src/queries'
+import {
+  GET_PRODUCT,
+  CHECKOUT_GET,
+  CHECKOUT_GET_LOCAL_ID,
+  CHECKOUT_LINE_ITEMS_REPLACE,
+} from 'src/queries'
 import { nodes } from 'src/helpers'
 
 const LiveProductAvailability = ({ productHandle, variantId, children }) => {
@@ -26,26 +31,59 @@ const LiveProductAvailability = ({ productHandle, variantId, children }) => {
   )
 }
 
-export const ProductVariant = ({
+const ProductVariantBase = ({
   id,
   productHandle,
   title,
   price,
+  checkoutLocal,
+  checkoutLineItemsReplace,
   ...props
-}) => (
-  <div {...props}>
-    <h4>{title}</h4>
-    <dl>
-      <dt>Price</dt>
-      <dd>${price}</dd>
-      <LiveProductAvailability productHandle={productHandle} variantId={id}>
-        {cond([
-          [get('loading'), always('Checking availability...')],
-          [get('error'), always('There was an error!')],
-          [negate(get('availableForSale')), always('Out of stock')],
-          [T, always(<button>Add to cart</button>)],
-        ])}
-      </LiveProductAvailability>
-    </dl>
-  </div>
-)
+}) => {
+  const addToCart = () => {
+    checkoutLineItemsReplace({
+      variables: {
+        lineItems: [
+          {
+            variantId: id,
+            quantity: 1,
+          },
+        ],
+      },
+    })
+  }
+
+  return (
+    <div {...props}>
+      <h4>{title}</h4>
+      <dl>
+        <dt>Price</dt>
+        <dd>${price}</dd>
+        <LiveProductAvailability productHandle={productHandle} variantId={id}>
+          {cond([
+            [get('loading'), always('Checking availability...')],
+            [get('error'), always('There was an error!')],
+            [negate(get('availableForSale')), always('Out of stock')],
+            [T, always(<button onClick={addToCart}>Add to cart</button>)],
+          ])}
+        </LiveProductAvailability>
+      </dl>
+    </div>
+  )
+}
+
+export const ProductVariant = compose(
+  graphql(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
+  graphql(CHECKOUT_LINE_ITEMS_REPLACE, {
+    name: 'checkoutLineItemsReplace',
+    options: ({ checkoutLocal }) => ({
+      variables: { checkoutId: get('checkoutId', checkoutLocal) },
+      refetchQueries: [
+        {
+          query: CHECKOUT_GET,
+          variables: { id: get('checkoutId', checkoutLocal) },
+        },
+      ],
+    }),
+  })
+)(ProductVariantBase)

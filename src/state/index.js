@@ -1,7 +1,7 @@
 export const clientState = {
   defaults: {
     customerAccessToken: null,
-    checkout: {},
+    checkoutId: null,
   },
   resolvers: {},
 }

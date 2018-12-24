@@ -2,8 +2,8 @@ require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
-const shopName = process.env.SHOPIFY_SHOP_NAME
-const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
+const shopName = process.env.GATSBY_SHOPIFY_SHOP_NAME
+const accessToken = process.env.GATSBY_SHOPIFY_ACCESS_TOKEN
 
 module.exports = {
   siteMetadata: {

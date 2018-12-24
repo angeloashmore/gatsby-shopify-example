@@ -44,7 +44,6 @@ import {
   style,
   variant,
 } from 'styled-system'
-import { prop } from 'lodash/fp'
 
 const clear = style({ prop: 'clear' })
 const cursor = style({ prop: 'cursor' })

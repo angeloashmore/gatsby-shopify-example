@@ -1,9 +1,9 @@
 import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
-import { Query } from 'react-apollo'
-import { get } from 'lodash/fp'
+import { Query, graphql as graphqlApollo } from 'react-apollo'
+import { get, compose, isEmpty, size } from 'lodash/fp'
 
-import { GET_CUSTOMER } from 'src/queries'
+import { GET_CUSTOMER, CHECKOUT_GET_LOCAL_ID, CHECKOUT_GET } from 'src/queries'
 import { Flex, Box, Heading, Text } from 'src/components/system'
 import { CustomerQuery } from 'src/components/CustomerQuery'
 import { Link } from 'src/components/Link'
@@ -22,7 +22,7 @@ const NavItem = ({ to, children, ...props }) => (
   </Box>
 )
 
-const render = props => queryData => (
+const render = ({ checkoutLocal, checkout, ...props }) => queryData => (
   <Flex
     as="header"
     alignItems={[null, 'flex-end']}
@@ -41,7 +41,14 @@ const render = props => queryData => (
       <Box as="ul">
         <NavItem to="/">Home</NavItem>
         <NavItem to="/products/">Products</NavItem>
-        <NavItem to="/cart/">Cart</NavItem>
+        <NavItem to="/cart/">
+          Cart (
+          {compose(
+            size,
+            get('node.lineItems.edges')
+          )(checkout)}
+          )
+        </NavItem>
         <CustomerQuery>
           {({ isAuthenticated, customerAccessToken }) =>
             isAuthenticated ? (
@@ -65,7 +72,7 @@ const render = props => queryData => (
   </Flex>
 )
 
-export const Header = props => (
+const HeaderBase = props => (
   <StaticQuery
     query={graphql`
       query {
@@ -79,3 +86,20 @@ export const Header = props => (
     render={render(props)}
   />
 )
+
+export const Header = compose(
+  graphqlApollo(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
+  graphqlApollo(CHECKOUT_GET, {
+    name: 'checkout',
+    skip: ({ checkoutLocal }) =>
+      compose(
+        isEmpty,
+        get('checkoutId')
+      )(checkoutLocal),
+    options: ({ checkoutLocal }) => ({
+      variables: {
+        id: get('checkoutId', checkoutLocal),
+      },
+    }),
+  })
+)(HeaderBase)
