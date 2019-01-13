@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Subheading } from 'src/components/system'
+import { Box, Subheading } from 'system'
 
 const AccountOrdersIndexPage = ({ location }) => {
   return (

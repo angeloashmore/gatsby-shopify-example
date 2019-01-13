@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button as ButtonBase } from 'src/components/system'
+import { Button as ButtonBase } from 'system'
 
 export const Button = ({ disabled, ...props }) => (
   <ButtonBase

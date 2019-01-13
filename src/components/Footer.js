@@ -2,8 +2,7 @@ import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
 import { get } from 'lodash/fp'
 
-import { Box, Flex, Text } from 'src/components/system'
-import { Link } from 'src/components/Link'
+import { Box, Flex, Text, Link } from 'system'
 
 const NavItem = ({ to, children, ...props }) => (
   <Box
@@ -30,7 +29,10 @@ const render = props => queryData => (
   >
     <Text fontSize="tiny">
       {get('site.siteMetadata.title', queryData)}.{' '}
-      <Link to="https://github.com/angeloashmore/gatsby-shopify-example">
+      <Link
+        display="inline-block"
+        to="https://github.com/angeloashmore/gatsby-shopify-example"
+      >
         View on GitHub
       </Link>
       .

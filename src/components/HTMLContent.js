@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Box, Text } from 'src/components/system'
-import { HTML } from 'src/components/HTML'
+import { Box, Text, HTML } from 'system'
 
 export const HTMLContent = ({ children, html, map = {}, ...props }) => (
   <Box {...props}>

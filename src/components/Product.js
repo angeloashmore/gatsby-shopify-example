@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { Box, Heading } from 'src/components/system'
+import { Box, Heading, Link } from 'system'
 import { HTMLContent } from 'src/components/HTMLContent'
-import { Link } from 'src/components/Link'
 
 export const Product = ({
   handle,

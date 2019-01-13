@@ -3,47 +3,50 @@
   "description": "Example Gatsby website to test Shopify static and live data",
   "version": "0.1.0",
   "author": "Angelo Ashmore",
+  "scripts": {
+    "format": "prettier --write README.md 'src/**/*.js' 'gatsby-*.js'",
+    "develop": "ENABLE_GATSBY_REFRESH_ENDPOINT=true gatsby develop",
+    "start": "npm run develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
+  },
   "dependencies": {
     "@reach/component-component": "^0.1.1",
+    "@walltowall/gatsby-theme-ww-base": "^0.5.2",
+    "@walltowall/system": "^1.0.1",
     "apollo-boost": "^0.1.20",
     "apollo-cache-persist": "^0.1.1",
     "formik": "^1.3.1",
-    "gatsby": "^2.0.19",
+    "gatsby": "^2.0.77",
     "gatsby-awesome-pagination": "^0.3.3",
-    "gatsby-image": "^2.0.15",
     "gatsby-plugin-create-client-paths": "^2.0.3",
-    "gatsby-plugin-lodash": "^3.0.2",
-    "gatsby-plugin-manifest": "^2.0.5",
-    "gatsby-plugin-netlify": "^2.0.6",
-    "gatsby-plugin-offline": "^2.0.11",
-    "gatsby-plugin-react-helmet": "^3.0.0",
     "gatsby-plugin-root-import": "^2.0.4",
-    "gatsby-plugin-sharp": "^2.0.7",
-    "gatsby-plugin-styled-components": "^3.0.2",
-    "gatsby-source-filesystem": "^2.0.4",
-    "gatsby-source-shopify": "^2.0.1",
-    "gatsby-transformer-sharp": "^2.1.4",
-    "html-react-parser": "^0.4.7",
+    "gatsby-source-shopify": "^2.0.8",
     "inter-ui": "^3.0.0",
-    "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
     "minireset.css": "^0.0.3",
-    "react": "^16.6.3",
+    "react": "^16.8.0-alpha.0",
     "react-apollo": "^2.2.4",
-    "react-dom": "^16.5.1",
+    "react-dom": "^16.8.0-alpha.0",
     "react-helmet": "^5.2.0",
-    "styled-components": "^4.1.1",
-    "styled-system": "^3.1.11",
+    "styled-components": "^4.1.3",
     "yup": "^0.26.6"
   },
-  "scripts": {
-    "build": "gatsby build",
-    "develop": "gatsby develop",
-    "start": "npm run develop",
-    "format": "prettier --write \"src/**/*.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "devDependencies": {
-    "prettier": "^1.14.2"
+    "@commitlint/cli": "7.2.1",
+    "@commitlint/config-conventional": "7.1.2",
+    "husky": "1.3.1",
+    "prettier": "^1.15.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

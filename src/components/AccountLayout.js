@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Heading } from 'src/components/system'
+import { Heading } from 'system'
 import { AccountNav } from 'src/components/AccountNav'
 import { AuthenticatedRoute } from 'src/components/AuthenticatedRoute'
 import { Layout } from 'src/components/Layout'

@@ -4,9 +4,8 @@ import { Query, graphql as graphqlApollo } from 'react-apollo'
 import { get, compose, isEmpty, size } from 'lodash/fp'
 
 import { GET_CUSTOMER, CHECKOUT_GET_LOCAL_ID, CHECKOUT_GET } from 'src/queries'
-import { Flex, Box, Heading, Text } from 'src/components/system'
+import { Flex, Box, Heading, Text, Link } from 'system'
 import { CustomerQuery } from 'src/components/CustomerQuery'
-import { Link } from 'src/components/Link'
 
 const NavItem = ({ to, children, ...props }) => (
   <Box

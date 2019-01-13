@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Subheading } from 'src/components/system'
+import { Subheading } from 'system'
 import { AccountLayout } from 'src/components/AccountLayout'
 
 const AccountPage = ({ location }) => {

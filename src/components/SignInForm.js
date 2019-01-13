@@ -2,7 +2,7 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { object as yupObject, string as yupString } from 'yup'
 
-import { Flex, Text, Input } from 'src/components/system'
+import { Flex, Text, Input } from 'system'
 import { Button } from 'src/components/Button'
 
 export const SignInForm = ({ onSubmit, ...props }) => (

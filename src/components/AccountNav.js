@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Box, Text } from 'src/components/system'
-import { Link } from 'src/components/Link'
+import { Box, Text, Link } from 'system'
 
 const NavItem = ({ to, children, ...props }) => (
   <Box

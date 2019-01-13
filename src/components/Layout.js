@@ -1,7 +1,7 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
-import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 import { graphql as graphqlApollo } from 'react-apollo'
 import Component from '@reach/component-component'
 import { get, compose, isEmpty } from 'lodash/fp'
@@ -12,7 +12,7 @@ import {
   CHECKOUT_GET,
 } from 'src/queries'
 import { theme } from 'src/theme'
-import { Box, Text } from 'src/components/system'
+import { SystemProvider, Box, Text } from 'system'
 import { Header } from 'src/components/Header'
 import { Footer } from 'src/components/Footer'
 
@@ -53,7 +53,7 @@ const render = ({ children, ...props }) => queryData => (
       <Helmet title={get('site.siteMetadata.title', queryData)}>
         <html lang="en" />
       </Helmet>
-      <ThemeProvider theme={theme}>
+      <SystemProvider theme={theme}>
         <>
           <GlobalStyle />
           <Text
@@ -70,7 +70,7 @@ const render = ({ children, ...props }) => queryData => (
             <Footer />
           </Text>
         </>
-      </ThemeProvider>
+      </SystemProvider>
     </>
   </Component>
 )

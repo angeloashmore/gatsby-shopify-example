@@ -8,7 +8,7 @@ import {
   CHECKOUT_GET_LOCAL_ID,
   CHECKOUT_LINE_ITEMS_REPLACE,
 } from 'src/queries'
-import { nodes } from 'src/helpers'
+import { nodes } from 'system/helpers'
 
 const LiveProductAvailability = ({ productHandle, variantId, children }) => {
   const getAvailableForSale = compose(

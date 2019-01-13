@@ -6,16 +6,27 @@ const shopName = process.env.GATSBY_SHOPIFY_SHOP_NAME
 const accessToken = process.env.GATSBY_SHOPIFY_ACCESS_TOKEN
 
 module.exports = {
-  siteMetadata: {
-    title: 'Gatsby Shopify Example',
-  },
+  __experimentalThemes: [
+    {
+      resolve: '@walltowall/gatsby-theme-ww-base',
+      options: {
+        root: __dirname,
+        siteTitle: 'Gatsby Shopify Example',
+        siteTitleShort: 'Shopify',
+        siteDescription:
+          'Example Gatsby website to test Shopify static and live data',
+        siteUrl: 'https://gatsby-shopify-example.netlify.com',
+        withNetlify: true,
+      },
+    },
+  ],
   plugins: [
-    'gatsby-plugin-react-helmet',
-    'gatsby-plugin-root-import',
-    'gatsby-plugin-lodash',
-    'gatsby-plugin-sharp',
-    'gatsby-plugin-styled-components',
-    'gatsby-transformer-sharp',
+    {
+      resolve: 'gatsby-plugin-root-import',
+      options: {
+        system: '@walltowall/system',
+      },
+    },
     {
       resolve: 'gatsby-plugin-create-client-paths',
       options: {
@@ -38,6 +49,5 @@ module.exports = {
         accessToken,
       },
     },
-    'gatsby-plugin-netlify',
   ],
 }

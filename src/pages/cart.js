@@ -3,7 +3,7 @@ import { Query } from 'react-apollo'
 import { get } from 'lodash/fp'
 
 import { CHECKOUT_GET_LOCAL_ID } from 'src/queries'
-import { Heading, Text } from 'src/components/system'
+import { Heading, Text } from 'system'
 import { Layout } from 'src/components/Layout'
 
 const CartPage = ({ location }) => {
