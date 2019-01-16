@@ -2,39 +2,46 @@ import React from 'react'
 import { graphql } from 'gatsby'
 import { get, map } from 'lodash/fp'
 
-import { Link } from 'system'
+import { Box, Link, HTML } from 'system'
+import { Heading } from 'src/components/Heading'
 import { Layout } from 'src/components/Layout'
 import { ProductVariant } from 'src/components/ProductVariant'
+import { Subheading } from 'src/components/Subheading'
 
 const ProductTemplate = ({ data }) => {
   const product = get('shopifyProduct', data)
 
   return (
     <Layout>
-      <p>
-        <Link to="/products/">Go to all products</Link>
-      </p>
-      <h2>{get('title', product)}</h2>
-      <h3>Description</h3>
-      <div
-        dangerouslySetInnerHTML={{ __html: get('descriptionHtml', product) }}
-      />
-      <h3>Variants</h3>
-      <ul>
+      <Link to="/products/" mb={2}>
+        Go to all products
+      </Link>
+      <Heading mb={2}>{get('title', product)}</Heading>
+      <Subheading>Description</Subheading>
+      <Box mb={2}>
+        <HTML html={get('descriptionHtml', product)} />
+      </Box>
+      <Subheading>Variants</Subheading>
+      <Box as="ul">
         {map(
           variant => (
-            <li key={get('id', variant)}>
+            <Box
+              as="li"
+              key={get('id', variant)}
+              mb={1}
+              boxStyle="lastNoMargin"
+            >
               <ProductVariant
-                id={get('shopifyId', variant)}
-                productHandle={get('handle', product)}
+                productId={get('shopifyId', product)}
+                variantId={get('shopifyId', variant)}
                 title={get('title', variant)}
                 price={get('price', variant)}
               />
-            </li>
+            </Box>
           ),
           get('variants', product)
         )}
-      </ul>
+      </Box>
     </Layout>
   )
 }
@@ -44,6 +51,7 @@ export default ProductTemplate
 export const query = graphql`
   query ProductTemplate($id: String!) {
     shopifyProduct(id: { eq: $id }) {
+      shopifyId
       title
       handle
       descriptionHtml

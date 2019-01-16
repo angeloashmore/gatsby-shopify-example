@@ -1,89 +1,64 @@
-import React from 'react'
-import { graphql, Query } from 'react-apollo'
-import { compose, get, find, cond, T, always, negate } from 'lodash/fp'
+import React, { Suspense } from 'react'
+import { get } from 'lodash/fp'
 
-import {
-  GET_PRODUCT,
-  CHECKOUT_GET,
-  CHECKOUT_GET_LOCAL_ID,
-  CHECKOUT_LINE_ITEMS_REPLACE,
-} from 'src/queries'
-import { nodes } from 'system/helpers'
+import { useShopifyProductVariant } from 'src/shopify'
+import { Box } from 'system'
+import { Button } from 'src/components/Button'
 
-const LiveProductAvailability = ({ productHandle, variantId, children }) => {
-  const getAvailableForSale = compose(
-    get('availableForSale'),
-    find(['id', variantId]),
-    nodes,
-    get('shop.productByHandle.variants')
+const LiveAddToCartButton = ({ productId, variantId, ...props }) => {
+  const { productVariant, error } = useShopifyProductVariant(
+    productId,
+    variantId
   )
+  const isAvailable = get('available', productVariant)
+  console.log(productVariant)
+
+  if (error) return error.message
 
   return (
-    <Query query={GET_PRODUCT} variables={{ handle: productHandle }}>
-      {({ loading, error, data }) =>
-        children({
-          loading,
-          error,
-          availableForSale: getAvailableForSale(data),
-        })
-      }
-    </Query>
+    <Button
+      onClick={() => console.log('add to cart')}
+      disabled={!isAvailable}
+      {...props}
+    >
+      {isAvailable ? 'Add to Cart' : 'Out of Stock'}
+    </Button>
   )
 }
 
-const ProductVariantBase = ({
-  id,
-  productHandle,
+export const ProductVariant = ({
+  productId,
+  variantId,
   title,
   price,
   checkoutLocal,
   checkoutLineItemsReplace,
   ...props
-}) => {
-  const addToCart = () => {
-    checkoutLineItemsReplace({
-      variables: {
-        lineItems: [
-          {
-            variantId: id,
-            quantity: 1,
-          },
-        ],
-      },
-    })
-  }
+}) => (
+  <Box {...props}>
+    <h4>{title}</h4>
+    <dl>
+      <dt>Price</dt>
+      <dd>${price}</dd>
+      <Suspense fallback="Loading&hellip;">
+        <LiveAddToCartButton productId={productId} variantId={variantId} />
+      </Suspense>
+    </dl>
+  </Box>
+)
 
-  return (
-    <div {...props}>
-      <h4>{title}</h4>
-      <dl>
-        <dt>Price</dt>
-        <dd>${price}</dd>
-        <LiveProductAvailability productHandle={productHandle} variantId={id}>
-          {cond([
-            [get('loading'), always('Checking availability...')],
-            [get('error'), always('There was an error!')],
-            [negate(get('availableForSale')), always('Out of stock')],
-            [T, always(<button onClick={addToCart}>Add to cart</button>)],
-          ])}
-        </LiveProductAvailability>
-      </dl>
-    </div>
-  )
-}
-
-export const ProductVariant = compose(
-  graphql(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
-  graphql(CHECKOUT_LINE_ITEMS_REPLACE, {
-    name: 'checkoutLineItemsReplace',
-    options: ({ checkoutLocal }) => ({
-      variables: { checkoutId: get('checkoutId', checkoutLocal) },
-      refetchQueries: [
-        {
-          query: CHECKOUT_GET,
-          variables: { id: get('checkoutId', checkoutLocal) },
-        },
-      ],
-    }),
-  })
-)(ProductVariantBase)
+// export const ProductVariant = compose(
+//   graphql(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
+//   graphql(CHECKOUT_LINE_ITEMS_REPLACE, {
+//     name: 'checkoutLineItemsReplace',
+//     options: ({ checkoutLocal }) => ({
+//       variables: { checkoutId: get('checkoutId', checkoutLocal) },
+//       refetchQueries: [
+//         {
+//           query: CHECKOUT_GET,
+//           variables: { id: get('checkoutId', checkoutLocal) },
+//         },
+//       ],
+//     }),
+//   })
+// )(ProductVariantBase)
