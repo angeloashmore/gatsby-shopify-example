@@ -88,9 +88,9 @@ The following technologies (i.e. libraries, frameworks) are used in this
 example.
 
 - Gatsby
-- React
+- React w/ hooks
 - GraphQL
-- Apollo (via `apollo-boost`)
+- Apollo (via `react-apollo-hooks`)
 
 `gatsby-source-shopify` is used to gather product information at build time.
 This eventually can be replaced with the more generic `gatsby-source-graphql`
