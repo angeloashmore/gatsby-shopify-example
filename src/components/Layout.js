@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
 import { get } from 'lodash/fp'
 
+import { useShopifyCheckout } from 'src/shopify'
 import { theme } from 'src/theme'
 import { SystemProvider, Box, Text } from 'system'
 import { Header } from 'src/components/Header'
 import { Footer } from 'src/components/Footer'
-import { ShopifyProvider } from 'src/shopify'
 
 import 'minireset.css'
 import 'inter-ui'
@@ -31,33 +31,43 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
+const ShopifySetup = () => {
+  const { hasCheckout, createCheckout } = useShopifyCheckout()
+
+  useEffect(
+    () => {
+      if (!hasCheckout) createCheckout()
+      return
+    },
+    [hasCheckout]
+  )
+
+  return null
+}
+
 const render = ({ children, ...props }) => queryData => (
   <>
     <Helmet title={get('site.siteMetadata.title', queryData)}>
       <html lang="en" />
     </Helmet>
     <SystemProvider theme={theme}>
-      <ShopifyProvider
-        shopName={process.env.GATSBY_SHOPIFY_SHOP_NAME}
-        storefrontAccessToken={process.env.GATSBY_SHOPIFY_ACCESS_TOKEN}
-      >
-        <>
-          <GlobalStyle />
-          <Text
-            as="div"
-            color="black"
-            fontFamily="sans"
-            fontSize="normal"
-            fontWeight="medium"
-            lineHeight="copy"
-            p={[2, 4]}
-          >
-            <Header />
-            <Box as="main">{children}</Box>
-            <Footer />
-          </Text>
-        </>
-      </ShopifyProvider>
+      <>
+        <GlobalStyle />
+        <ShopifySetup />
+        <Text
+          as="div"
+          color="black"
+          fontFamily="sans"
+          fontSize="normal"
+          fontWeight="medium"
+          lineHeight="copy"
+          p={[2, 4]}
+        >
+          <Header />
+          <Box as="main">{children}</Box>
+          <Footer />
+        </Text>
+      </>
     </SystemProvider>
   </>
 )

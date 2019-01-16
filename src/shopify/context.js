@@ -21,6 +21,12 @@ const reducer = (state, action) => {
     case 'SIGN_OUT':
       return initialState
 
+    case 'SET_CHECKOUT_ID':
+      return {
+        ...reduced,
+        checkoutId: payload,
+      }
+
     default:
       return reduced
   }

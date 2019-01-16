@@ -11,8 +11,6 @@ const LiveAddToCartButton = ({ productId, variantId, ...props }) => {
     variantId
   )
   const isAvailable = get('available', productVariant)
-  console.log(productVariant)
-
   if (error) return error.message
 
   return (
