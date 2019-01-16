@@ -2,12 +2,12 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { object as yupObject, string as yupString } from 'yup'
 
-import { useShopifyCustomer } from 'src/shopify'
+import { useShopifyAuth } from 'src/shopify'
 import { Flex, Text, Input } from 'system'
 import { Button } from 'src/components/Button'
 
 export const SignInForm = props => {
-  const { login } = useShopifyCustomer()
+  const { signIn } = useShopifyAuth()
 
   return (
     <Formik
@@ -22,7 +22,7 @@ export const SignInForm = props => {
         password: yupString().required(),
       })}
       onSubmit={async ({ email, password }, { setSubmitting }) => {
-        await login(email, password)
+        await signIn(email, password)
         setSubmitting(false)
       }}
     >

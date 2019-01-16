@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { CustomerQuery } from 'src/components/CustomerQuery'
 import { Redirect } from 'src/components/Redirect'
+import { useShopifyAuth } from 'src/shopify'
 
-export const AuthenticatedRoute = ({ to = '/sign-in/', ...props }) => (
-  <CustomerQuery {...props}>
-    {({ isAuthenticated }) => !isAuthenticated && <Redirect to={to} />}
-  </CustomerQuery>
-)
+export const AuthenticatedRoute = ({ to = '/sign-in/', ...props }) => {
+  const { isSignedIn } = useShopifyAuth()
+
+  return isSignedIn ? <Redirect to={to} /> : null
+}
