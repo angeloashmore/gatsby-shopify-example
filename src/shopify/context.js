@@ -18,14 +18,14 @@ const reducer = (state, action) => {
         customerAccessToken: payload,
       }
 
-    case 'SIGN_OUT':
-      return initialState
-
     case 'SET_CHECKOUT_ID':
       return {
         ...reduced,
         checkoutId: payload,
       }
+
+    case 'SIGN_OUT':
+      return initialState
 
     default:
       return reduced
