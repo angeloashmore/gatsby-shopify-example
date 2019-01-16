@@ -56,11 +56,6 @@ export const ShopifyProvider = ({
     headers: {
       'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
     },
-    clientState: {
-      defaults: {
-        customerAccessToken: null,
-      },
-    },
   })
 
   return (
