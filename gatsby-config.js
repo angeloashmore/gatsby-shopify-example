@@ -34,15 +34,6 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-apollo-boost',
-      options: {
-        uri: `https://${shopName}.myshopify.com/api/graphql`,
-        headers: {
-          'X-Shopify-Storefront-Access-Token': accessToken,
-        },
-      },
-    },
-    {
       resolve: 'gatsby-source-shopify',
       options: {
         shopName,

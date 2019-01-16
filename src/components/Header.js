@@ -1,9 +1,9 @@
 import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
-import { Query, graphql as graphqlApollo } from 'react-apollo'
+// import { Query, graphql as graphqlApollo } from 'react-apollo'
 import { get, compose, isEmpty, size } from 'lodash/fp'
 
-import { GET_CUSTOMER, CHECKOUT_GET_LOCAL_ID, CHECKOUT_GET } from 'src/queries'
+// import { GET_CUSTOMER, CHECKOUT_GET_LOCAL_ID, CHECKOUT_GET } from 'src/queries'
 import { Flex, Box, Heading, Text, Link } from 'system'
 import { CustomerQuery } from 'src/components/CustomerQuery'
 
@@ -53,6 +53,7 @@ const render = ({ checkoutLocal, checkout, ...props }) => queryData => (
             isAuthenticated ? (
               <>
                 <NavItem to="/account/">Account</NavItem>
+                {/*
                 <Query query={GET_CUSTOMER} variables={{ customerAccessToken }}>
                   {({ data }) => (
                     <NavItem to="/sign-out/">
@@ -60,6 +61,7 @@ const render = ({ checkoutLocal, checkout, ...props }) => queryData => (
                     </NavItem>
                   )}
                 </Query>
+                */}
               </>
             ) : (
               <NavItem to="/sign-in/">Sign In</NavItem>
@@ -71,7 +73,7 @@ const render = ({ checkoutLocal, checkout, ...props }) => queryData => (
   </Flex>
 )
 
-const HeaderBase = props => (
+export const Header = props => (
   <StaticQuery
     query={graphql`
       query {
@@ -86,19 +88,19 @@ const HeaderBase = props => (
   />
 )
 
-export const Header = compose(
-  graphqlApollo(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
-  graphqlApollo(CHECKOUT_GET, {
-    name: 'checkout',
-    skip: ({ checkoutLocal }) =>
-      compose(
-        isEmpty,
-        get('checkoutId')
-      )(checkoutLocal),
-    options: ({ checkoutLocal }) => ({
-      variables: {
-        id: get('checkoutId', checkoutLocal),
-      },
-    }),
-  })
-)(HeaderBase)
+// export const Header = compose(
+//   graphqlApollo(CHECKOUT_GET_LOCAL_ID, { name: 'checkoutLocal' }),
+//   graphqlApollo(CHECKOUT_GET, {
+//     name: 'checkout',
+//     skip: ({ checkoutLocal }) =>
+//       compose(
+//         isEmpty,
+//         get('checkoutId')
+//       )(checkoutLocal),
+//     options: ({ checkoutLocal }) => ({
+//       variables: {
+//         id: get('checkoutId', checkoutLocal),
+//       },
+//     }),
+//   })
+// )(HeaderBase)

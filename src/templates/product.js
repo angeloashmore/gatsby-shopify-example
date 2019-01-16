@@ -4,7 +4,7 @@ import { get, map } from 'lodash/fp'
 
 import { Link } from 'system'
 import { Layout } from 'src/components/Layout'
-import { ProductVariant } from 'src/components/ProductVariant'
+import { ProductVariant } from 'src/components/ProductVariant2'
 
 const ProductTemplate = ({ data }) => {
   const product = get('shopifyProduct', data)
@@ -25,8 +25,8 @@ const ProductTemplate = ({ data }) => {
           variant => (
             <li key={get('id', variant)}>
               <ProductVariant
-                id={get('shopifyId', variant)}
-                productHandle={get('handle', product)}
+                productId={get('shopifyId', product)}
+                variantId={get('shopifyId', variant)}
                 title={get('title', variant)}
                 price={get('price', variant)}
               />
@@ -44,11 +44,11 @@ export default ProductTemplate
 export const query = graphql`
   query ProductTemplate($id: String!) {
     shopifyProduct(id: { eq: $id }) {
+      shopifyId
       title
       handle
       descriptionHtml
       variants {
-        id
         shopifyId
         title
         price
