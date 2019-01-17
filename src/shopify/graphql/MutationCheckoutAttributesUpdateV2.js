@@ -4,9 +4,12 @@ import { FragmentCheckout } from './FragmentCheckout'
 import { FragmentCheckoutUserError } from './FragmentCheckoutUserError'
 import { FragmentUserError } from './FragmentUserError'
 
-export const MutationCheckoutCreate = gql`
-  mutation($input: CheckoutCreateInput!) {
-    checkoutCreate(input: $input) {
+export const MutationCheckoutAttributesUpdateV2 = gql`
+  mutation checkoutAttributesUpdateV2(
+    $checkoutId: ID!
+    $input: CheckoutAttributesUpdateV2Input!
+  ) {
+    checkoutAttributesUpdateV2(checkoutId: $checkoutId, input: $input) {
       userErrors {
         ...FragmentUserError
       }
