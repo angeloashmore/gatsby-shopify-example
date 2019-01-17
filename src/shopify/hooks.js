@@ -8,6 +8,11 @@ import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
 import { QueryProductNode } from './graphql/QueryProductNode'
 
+/***
+ * useShopifyApolloClient
+ *
+ * Returns direct access to the Apollo client for arbitrary query execution.
+ */
 export { useApolloClient as useShopifyApolloClient }
 
 /***
@@ -76,6 +81,9 @@ export const useShopifyCheckout = () => {
     checkoutId: state.checkoutId,
     hasCheckout: Boolean(state.checkoutId),
 
+    // The url pointing to the checkout accessible from the web.
+    webUrl: state.checkoutWebUrl,
+
     // Creates a checkout. The checkout includes no line items by default.
     createCheckout: async options => {
       const result = await mutationCheckoutCreate({
@@ -86,10 +94,15 @@ export const useShopifyCheckout = () => {
         },
       })
 
-      const id = get('data.checkoutCreate.checkout.id', result)
+      const checkout = get('data.checkoutCreate.checkout', result)
 
-      if (id) {
+      const id = get('id', checkout)
+      const webUrl = get('webUrl', checkout)
+
+      if (id && webUrl) {
         dispatch({ type: 'SET_CHECKOUT_ID', payload: id })
+        dispatch({ type: 'SET_CHECKOUT_WEB_URL', payload: webUrl })
+
         return true
       }
 

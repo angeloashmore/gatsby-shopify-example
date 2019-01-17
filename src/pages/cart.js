@@ -1,22 +1,20 @@
 import React from 'react'
 
 import { useShopifyCheckout } from 'src/shopify'
-import { Heading, Text } from 'system'
+import { Heading, Text, Link } from 'system'
+import { Button } from 'src/components/Button'
 import { Layout } from 'src/components/Layout'
 
-const CheckoutId = () => {
-  const { hasCheckout, checkoutId } = useShopifyCheckout()
-
-  return hasCheckout ? checkoutId : 'none'
-}
-
 const CartPage = props => {
+  const { hasCheckout, checkoutId, webUrl } = useShopifyCheckout()
+
   return (
     <Layout>
       <Heading>Cart</Heading>
-      <Text>
-        <CheckoutId />
-      </Text>
+      <Text>{hasCheckout ? checkoutId : 'none'}</Text>
+      <Button as={Link} disabled={!hasCheckout} to={webUrl}>
+        Checkout
+      </Button>
     </Layout>
   )
 }

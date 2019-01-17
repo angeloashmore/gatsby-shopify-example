@@ -1,23 +1,27 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
+import { navigate } from 'gatsby'
 
 import { useShopifyAuth } from 'src/shopify'
 import { Layout } from 'src/components/Layout'
-import { Redirect } from 'src/components/Redirect'
 import { SignInForm } from 'src/components/SignInForm'
 
-const RedirectIfSignedIn = () => {
+const SignInPage = () => {
   const { isSignedIn } = useShopifyAuth()
 
-  return isSignedIn ? <Redirect to="/account/" /> : null
-}
+  useEffect(
+    () => {
+      if (isSignedIn) navigate('/account/')
+    },
+    [isSignedIn]
+  )
 
-const SignInPage = () => (
-  <Layout>
-    <RedirectIfSignedIn />
-    <Suspense fallback="Loading&hellip;">
-      <SignInForm />
-    </Suspense>
-  </Layout>
-)
+  return (
+    <Layout>
+      <Suspense fallback="Loading&hellip;">
+        <SignInForm />
+      </Suspense>
+    </Layout>
+  )
+}
 
 export default SignInPage

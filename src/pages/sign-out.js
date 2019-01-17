@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { navigate } from 'gatsby'
 
 import { useShopifyAuth } from 'src/shopify'
-import { Redirect } from 'src/components/Redirect'
+import { Heading } from 'src/components/Heading'
+import { Layout } from 'src/components/Layout'
 
 const SignOutPage = props => {
   const { signOut } = useShopifyAuth()
 
-  signOut()
+  useEffect(() => {
+    signOut()
+    navigate('/')
+  }, [])
 
-  return <Redirect to="/sign-in/" />
+  return (
+    <Layout>
+      <Heading>Signing out&hellip;</Heading>
+    </Layout>
+  )
 }
 
 export default SignOutPage

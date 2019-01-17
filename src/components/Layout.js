@@ -31,7 +31,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const ShopifySetup = () => {
+export const Layout = ({ children, ...props }) => {
   const { hasCheckout, createCheckout } = useShopifyCheckout()
 
   useEffect(
@@ -42,47 +42,42 @@ const ShopifySetup = () => {
     [hasCheckout]
   )
 
-  return null
-}
-
-const render = ({ children, ...props }) => queryData => (
-  <>
-    <Helmet title={get('site.siteMetadata.title', queryData)}>
-      <html lang="en" />
-    </Helmet>
-    <SystemProvider theme={theme}>
-      <>
-        <GlobalStyle />
-        <ShopifySetup />
-        <Text
-          as="div"
-          color="black"
-          fontFamily="sans"
-          fontSize="normal"
-          fontWeight="medium"
-          lineHeight="copy"
-          p={[2, 4]}
-        >
-          <Header />
-          <Box as="main">{children}</Box>
-          <Footer />
-        </Text>
-      </>
-    </SystemProvider>
-  </>
-)
-
-export const Layout = props => (
-  <StaticQuery
-    query={graphql`
-      query {
-        site {
-          siteMetadata {
-            title
+  return (
+    <StaticQuery
+      query={graphql`
+        query {
+          site {
+            siteMetadata {
+              title
+            }
           }
         }
-      }
-    `}
-    render={render(props)}
-  />
-)
+      `}
+      render={queryData => (
+        <>
+          <Helmet title={get('site.siteMetadata.title', queryData)}>
+            <html lang="en" />
+          </Helmet>
+          <SystemProvider theme={theme}>
+            <>
+              <GlobalStyle />
+              <Text
+                as="div"
+                color="black"
+                fontFamily="sans"
+                fontSize="normal"
+                fontWeight="medium"
+                lineHeight="copy"
+                p={[2, 4]}
+              >
+                <Header />
+                <Box as="main">{children}</Box>
+                <Footer />
+              </Text>
+            </>
+          </SystemProvider>
+        </>
+      )}
+    />
+  )
+}
