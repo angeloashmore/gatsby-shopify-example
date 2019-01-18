@@ -1,11 +1,12 @@
 import { useContext } from 'react'
 import { useApolloClient, useQuery, useMutation } from 'react-apollo-hooks'
-import { compose, get, find, merge } from 'lodash/fp'
+import { compose, get, find, merge, isEmpty } from 'lodash/fp'
 
 import { getNodes } from './lib'
 import { ReducerContext } from './context'
 import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
+import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
 import { QueryProductNode } from './graphql/QueryProductNode'
 
 /***
@@ -73,42 +74,49 @@ export const useShopifyAuth = () => {
  *
  * Manages checkout.
  */
+
+const { cart, error, createCart, webUrl, cartId } = useShopifyCart()
+
 export const useShopifyCheckout = () => {
   const [state, dispatch] = useShopifyReducer()
+
+  // Nodes
+  const checkoutId = get('checkoutId', state)
+  const { data: checkoutData } = useQuery(QueryCheckoutNode, {
+    variables: { id: checkoutId },
+    skip: isEmpty(checkoutId),
+  })
+  const checkoutNode = get('node', checkoutData)
+
+  // Mutations
   const mutationCheckoutCreate = useMutation(MutationCheckoutCreate)
 
-  return {
-    checkoutId: state.checkoutId,
-    hasCheckout: Boolean(state.checkoutId),
+  return [
+    checkoutNode,
+    {
+      // Creates a checkout and updates checkout-dependent queries.  Includes
+      // no line items by default. Sets the checkout ID to the global store.
+      createCheckout: async options => {
+        const result = await mutationCheckoutCreate({
+          variables: {
+            input: merge(options, {
+              lineItems: [],
+            }),
+          },
+        })
 
-    // The url pointing to the checkout accessible from the web.
-    webUrl: state.checkoutWebUrl,
+        const id = get('data.checkoutCreate.checkout.id', result)
 
-    // Creates a checkout. The checkout includes no line items by default.
-    createCheckout: async options => {
-      const result = await mutationCheckoutCreate({
-        variables: {
-          input: merge(options, {
-            lineItems: [],
-          }),
-        },
-      })
+        if (id) {
+          dispatch({ type: 'SET_CHECKOUT_ID', payload: id })
 
-      const checkout = get('data.checkoutCreate.checkout', result)
+          return true
+        }
 
-      const id = get('id', checkout)
-      const webUrl = get('webUrl', checkout)
-
-      if (id && webUrl) {
-        dispatch({ type: 'SET_CHECKOUT_ID', payload: id })
-        dispatch({ type: 'SET_CHECKOUT_WEB_URL', payload: webUrl })
-
-        return true
-      }
-
-      return false
+        return false
+      },
     },
-  }
+  ]
 }
 
 /***

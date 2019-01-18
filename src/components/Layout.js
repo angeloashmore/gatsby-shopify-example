@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
@@ -32,14 +32,14 @@ const GlobalStyle = createGlobalStyle`
 `
 
 export const Layout = ({ children, ...props }) => {
-  const { hasCheckout, createCheckout } = useShopifyCheckout()
+  const [checkout, { createCheckout }] = useShopifyCheckout()
 
   useEffect(
     () => {
-      if (!hasCheckout) createCheckout()
+      if (!checkout) createCheckout()
       return
     },
-    [hasCheckout]
+    [checkout]
   )
 
   return (
@@ -59,7 +59,7 @@ export const Layout = ({ children, ...props }) => {
             <html lang="en" />
           </Helmet>
           <SystemProvider theme={theme}>
-            <>
+            <Suspense fallback="Loading&hellip;">
               <GlobalStyle />
               <Text
                 as="div"
@@ -74,7 +74,7 @@ export const Layout = ({ children, ...props }) => {
                 <Box as="main">{children}</Box>
                 <Footer />
               </Text>
-            </>
+            </Suspense>
           </SystemProvider>
         </>
       )}

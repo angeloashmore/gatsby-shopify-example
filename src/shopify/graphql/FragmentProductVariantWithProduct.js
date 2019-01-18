@@ -4,7 +4,7 @@ import { FragmentProductVariant } from './FragmentProductVariant'
 
 export const FragmentProductVariantWithProduct = gql`
   fragment FragmentProductVariantWithProduct on ProductVariant {
-    ...VariantFragment
+    ...FragmentProductVariant
     product {
       id
     }
