@@ -3,9 +3,9 @@ import { gql } from 'apollo-boost'
 import { FragmentCustomerAccessToken } from './FragmentCustomerAccessToken'
 import { FragmentUserError } from './FragmentUserError'
 
-export const MutationCustomerAccessTokenCreate = gql`
-  mutation($input: CustomerAccessTokenCreateInput!) {
-    customerAccessTokenCreate(input: $input) {
+export const MutationCustomerAccessTokenRenew = gql`
+  mutation($customerAccessToken: String!) {
+    customerAccessTokenRenew(customerAccessToken: $customerAccessToken) {
       userErrors {
         ...FragmentUserError
       }

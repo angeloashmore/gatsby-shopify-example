@@ -4,10 +4,14 @@ import { compose, get, find, merge, isEmpty } from 'lodash/fp'
 
 import { getNodes } from './lib'
 import { ReducerContext } from './context'
+import { MutationCheckoutAttributesUpdateV2 } from './graphql/MutationCheckoutAttributesUpdateV2'
 import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
+import { MutationCustomerAccessTokenDelete } from './graphql/MutationCustomerAccessTokenDelete'
+import { MutationCustomerAccessTokenRenew } from './graphql/MutationCustomerAccessTokenRenew'
 import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
 import { QueryProductNode } from './graphql/QueryProductNode'
+import { mutationResultNormalizer } from './mutationResultNormalizer'
 
 /***
  * useShopifyApolloClient
@@ -70,66 +74,19 @@ export const useShopifyAuth = () => {
 }
 
 /***
- * useShopifyCheckout
- *
- * Manages checkout.
- */
-export const useShopifyCheckout = () => {
-  const [state, dispatch] = useShopifyReducer()
-
-  // Nodes
-  const checkoutId = get('checkoutId', state)
-  const { data: checkoutData } = useQuery(QueryCheckoutNode, {
-    variables: { id: checkoutId },
-    skip: isEmpty(checkoutId),
-  })
-  const checkoutNode = get('node', checkoutData)
-
-  // Mutations
-  const mutationCheckoutCreate = useMutation(MutationCheckoutCreate)
-
-  return {
-    checkout: checkoutNode,
-    actions: {
-      // Creates a checkout and updates checkout-dependent queries. Includes no
-      // line items by default. Sets the checkout ID to the global store.
-      createCheckout: async options => {
-        const result = await mutationCheckoutCreate({
-          variables: {
-            input: merge(options, {
-              lineItems: [],
-            }),
-          },
-        })
-
-        const id = get('data.checkoutCreate.checkout.id', result)
-
-        if (id) {
-          dispatch({ type: 'SET_CHECKOUT_ID', payload: id })
-
-          return true
-        }
-
-        return false
-      },
-    },
-  }
-}
-
-/***
  * useShopifyProduct
  *
  * Provides product data for a given product ID.
  */
-export const useShopifyProduct = (id, options) => {
-  const { data, ...rest } = useQuery(
+export const useShopifyProduct = id => {
+  const { data, error } = useQuery(
     QueryProductNode,
     merge(options, {
       variables: { id },
     })
   )
 
-  return { product: get('node', data), ...rest }
+  return { product: get('node', data), error }
 }
 
 /***
@@ -138,8 +95,8 @@ export const useShopifyProduct = (id, options) => {
  * Provides product variant data for a given product ID and variant ID. Note
  * that both product and variant ID is required to query data.
  */
-export const useShopifyProductVariant = (productId, variantId, options) => {
-  const { product, ...rest } = useShopifyProduct(productId, options)
+export const useShopifyProductVariant = (productId, variantId) => {
+  const { product, error } = useShopifyProduct(productId)
 
   return {
     productVariant: compose(
@@ -147,6 +104,107 @@ export const useShopifyProductVariant = (productId, variantId, options) => {
       getNodes,
       get('variants')
     )(product),
-    ...rest,
+    error,
+  }
+}
+
+/***
+ * useShopifyCustomerAccessToken
+ *
+ * Manages customer access token creation, renewal, and deletion.
+ */
+export const useShopifyCustomerAccessToken = () => {
+  const mutationCustomerAccessTokenCreate = useMutation(
+    MutationCustomerAccessTokenCreate
+  )
+  const mutationCustomerAccessTokenRenew = useMutation(
+    MutationCustomerAccessTokenRenew
+  )
+  const mutationCustomerAccessTokenDelete = useMutation(
+    MutationCustomerAccessTokenDelete
+  )
+
+  return {
+    // Create a new customer access token. Returns the token.
+    create: async (email, password) =>
+      await mutationCustomerAccessTokenCreate({
+        variables: {
+          input: {
+            email,
+            password,
+          },
+        },
+      }),
+
+    // Renew the customer access token. Returns the renewed token.
+    renew: async customerAccessToken =>
+      await mutationCustomerAccessTokenRenew({
+        variables: {
+          customerAccessToken,
+        },
+      }),
+
+    // Permanently delete the customer access token.
+    delete: async customerAccessToken =>
+      await mutationCustomerAccessTokenDelete({
+        variables: {
+          customerAccessToken,
+        },
+      }),
+  }
+}
+
+/***
+ * useShopifyCheckout
+ *
+ * Fetches a checkout using the provided checkout ID and provides actions for
+ * that checkout.
+ */
+export const useShopifyCheckout = checkoutId => {
+  // Nodes
+  const { data: checkoutData } = useQuery(QueryCheckoutNode, {
+    variables: { id: checkoutId },
+    skip: Boolean(checkoutId),
+  })
+  const checkoutNode = get('node', checkoutData)
+
+  // Mutations
+  const mutationCheckoutCreate = useMutation(MutationCheckoutCreate)
+  const mutationCheckoutAttributesUpdateV2 = useMutation(
+    MutationCheckoutAttributesUpdateV2
+  )
+
+  return {
+    // All checkout data. Data updates on successful actions.
+    checkout: checkoutNode,
+
+    // Error message if fetching checkout data failed.
+    error,
+
+    // Collection of functions related to the product variant.
+    actions: {
+      // Create a new checkout.
+      createCheckout: async input => {
+        const result = await mutationCheckoutCreate({
+          variables: {
+            input,
+          },
+        })
+
+        return mutationResultNormalizer('checkoutCreate', 'checkout', result)
+      },
+
+      // Update the checkout attributes.
+      attributesUpdate: async input => {
+        const result = await mutationCheckoutAttributesUpdateV2({
+          variables: {
+            checkoutId,
+            input,
+          },
+        })
+
+        return mutationResultNormalizer('checkoutUpdate', 'checkout', result)
+      },
+    },
   }
 }
