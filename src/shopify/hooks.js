@@ -74,9 +74,6 @@ export const useShopifyAuth = () => {
  *
  * Manages checkout.
  */
-
-const { cart, error, createCart, webUrl, cartId } = useShopifyCart()
-
 export const useShopifyCheckout = () => {
   const [state, dispatch] = useShopifyReducer()
 
@@ -91,11 +88,11 @@ export const useShopifyCheckout = () => {
   // Mutations
   const mutationCheckoutCreate = useMutation(MutationCheckoutCreate)
 
-  return [
-    checkoutNode,
-    {
-      // Creates a checkout and updates checkout-dependent queries.  Includes
-      // no line items by default. Sets the checkout ID to the global store.
+  return {
+    checkout: checkoutNode,
+    actions: {
+      // Creates a checkout and updates checkout-dependent queries. Includes no
+      // line items by default. Sets the checkout ID to the global store.
       createCheckout: async options => {
         const result = await mutationCheckoutCreate({
           variables: {
@@ -116,7 +113,7 @@ export const useShopifyCheckout = () => {
         return false
       },
     },
-  ]
+  }
 }
 
 /***
