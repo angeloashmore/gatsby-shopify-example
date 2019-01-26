@@ -25,6 +25,15 @@ import { MutationCheckoutGiftCardsAppend } from './graphql/MutationCheckoutGiftC
 import { MutationCheckoutLineItemsReplace } from './graphql/MutationCheckoutLineItemsReplace'
 import { MutationCheckoutShippingLineUpdate } from './graphql/MutationCheckoutShippingLineUpdate'
 
+import { MutationCustomerActivate } from './graphql/MutationCustomerActivate'
+import { MutationCustomerAddressUpdate } from './graphql/MutationCustomerAddressUpdate'
+import { MutationCustomerCreate } from './graphql/MutationCustomerCreate'
+import { MutationCustomerDefaultAddressUpdate } from './graphql/MutationCustomerDefaultAddressUpdate'
+import { MutationCustomerRecover } from './graphql/MutationCustomerRecover'
+import { MutationCustomerReset } from './graphql/MutationCustomerReset'
+import { MutationCustomerResetByUrl } from './graphql/MutationCustomerResetByUrl'
+import { MutationCustomerUpdate } from './graphql/MutationCustomerUpdate'
+
 /***
  * useShopifyApolloClient
  *
@@ -336,6 +345,177 @@ export const useShopifyCheckout = checkoutId => {
           'checkout',
           result
         )
+      },
+    },
+  }
+}
+
+/***
+ * useShopifyCustomer
+ *
+ * Fetches a customer using the provided customer access token and provides
+ * actions for that customer.
+ */
+export const useShopifyCustomer = customerAccessToken => {
+  // Nodes
+  const { data: customerData, error } = useQuery(QueryCustomerNode, {
+    variables: { customerAccessToken },
+    skip: Boolean(customerAccessToken),
+  })
+  const customerNode = get('node', customerData)
+
+  // Mutations
+  const mutationCustomerActivate = useMutation(MutationCustomerActivate)
+  const mutationCustomerAddressCreate = useMutation(
+    MutationCustomerAddressCreate
+  )
+  const mutationCustomerAddressDelete = useMutation(
+    MutationCustomerAddressDelete
+  )
+  const mutationCustomerAddressUpdate = useMutation(
+    MutationCustomerAddressUpdate
+  )
+  const mutationCustomerCreate = useMutation(MutationCustomerCreate)
+  const mutationCustomerDefaultAddressUpdate = useMutation(
+    MutationCustomerDefaultAddressUpdate
+  )
+  const mutationCustomerRecover = useMutation(MutationCustomerRecover)
+  const mutationCustomerReset = useMutation(MutationCustomerReset)
+  const mutationCustomerResetByUrl = useMutation(MutationCustomerResetByUrl)
+  const mutationCustomerUpdate = useMutation(MutationCustomerUpdate)
+
+  return {
+    // All customer data. Data updates on successful actions.
+    customer: customerNode,
+
+    // Error message if fetching customer data failed.
+    error,
+
+    // Collection of functions related to the customer.
+    actions: {
+      // Create a new customer. Returns the customer
+      createCustomer: async (email, password) => {
+        const result = await mutationCustomerCreate({
+          variables: {
+            input: { email, password },
+          },
+        })
+
+        return mutationResultNormalizer('customerCreate', 'customer', result)
+      },
+
+      // Activate a customer using the provided customer ID, activation token,
+      // and password. Returns customer access token data.
+      activateCustomer: async (id, activationToken, password) => {
+        const result = await mutationCustomerActivate({
+          variables: {
+            id,
+            input: { activationToken, password },
+          },
+        })
+
+        return mutationResultNormalizer(
+          'customerActivate',
+          'customerAccessToken',
+          result
+        )
+      },
+
+      // Send a reset password email to the customer.
+      recoverCustomer: async email => {
+        const result = await mutationCustomerRecover({
+          variables: { email },
+        })
+
+        return mutationResultNormalizer('customerRecover', false, result)
+      },
+
+      // Reset a customer's password with the provided reset token and
+      // password. Returns customer access token data.
+      resetCustomer: async (id, resetToken, password) => {
+        const result = await mutationCustomerReset({
+          variables: {
+            id,
+            input: { resetToken, password },
+          },
+        })
+
+        return mutationResultNormalizer(
+          'customerReset',
+          'customerAccessToken',
+          result
+        )
+      },
+
+      // Reset a customer's password with the provided reset URL and password.
+      // Returns customer access token data.
+      resetCustomerByUrl: async (resetUrl, password) => {
+        const result = await mutationCustomerResetByUrl({
+          variables: { resetUrl, password },
+        })
+
+        return mutationResultNormalizer(
+          'customerResetByUrl',
+          'customerAccessToken',
+          result
+        )
+      },
+
+      // Add an address to the customer.
+      addressCreate: async address => {
+        const result = await mutationCustomerAddressCreate({
+          variables: { customerAccessToken, address },
+        })
+
+        return mutationResultNormalizer(
+          'customerAddressCreate',
+          'customerAddress',
+          result
+        )
+      },
+
+      // Delete a customer's address using the address ID.
+      addressDelete: async id => {
+        const result = await mutationCustomerAddressDelete({
+          variables: { customerAccessToken, id },
+        })
+
+        return mutationResultNormalizer('customerAddressDelete', false, result)
+      },
+
+      // Update a customer's address using the address ID.
+      addressUpdate: async (id, address) => {
+        const result = await mutationCustomerAddressUpdate({
+          variables: { customerAccessToken, id, address },
+        })
+
+        return mutationResultNormalizer(
+          'customerAddressUpdate',
+          'customerAddress',
+          result
+        )
+      },
+
+      // Set a default address for the customer.
+      addressDefaultAddressUpdate: async addressId => {
+        const result = await mutationCustomerDefaultAddressUpdate({
+          variables: { customerAccessToken, addressId },
+        })
+
+        return mutationResultNormalizer(
+          'customerDefaultAddressUpdate',
+          'customer',
+          result
+        )
+      },
+
+      // Update a customer's attributes.
+      updateCustomer: async customer => {
+        const result = await mutationCustomerUpdate({
+          variables: { customerAccessToken, customer },
+        })
+
+        return mutationResultNormalizer('customerUpdate', 'customer', result)
       },
     },
   }
