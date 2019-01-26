@@ -1,3 +1,6 @@
+import { merge } from 'lodash/fp'
+
+import { getNodes } from './lib'
 import { ReducerContext } from './context'
 import { useShopifyCustomerAccessToken } from './hooks'
 
@@ -11,38 +14,63 @@ export const useShopifyReducer = () => useContext(ReducerContext)
 /***
  * useShopifyAuth
  */
-export const useShopifyAuth = () => {
+export const useShopifyAuth = (autoRenew = true) => {
   const [{ customerAccessToken }, dispatch] = useShopifyReducer()
-  const { customer, error } = useShopifyCustomer(customerAccessToken)
+  const useShopifyCustomerResult = useShopifyCustomer(customerAccessToken)
   const {
     createCustomerAccessToken,
     renewCustomerAccessToken,
     deleteCustomerAccessToken,
   } = useShopifyCustomerAccessToken()
 
-  return {
-    customer,
-    error,
+  // Renews and sets the global customer access token.
+  const renewToken = async () => {
+    const { accessToken, expiresAt, ...rest } = await renewCustomerAccessToken(
+      customerAccessToken
+    )
+
+    dispatch({
+      type: 'SET_CUSTOMER_ACCESS_TOKEN',
+      payload: { accessToken, expiresAt },
+    })
+
+    return { accessToken, expiresAt, ...rest }
+  }
+
+  // TODO: Add auto-renew logic here.
+  // - If wihin 1 day (duration undecided) of expiration, renew token
+
+  return merge(useShopifyCustomerResult, {
     customerAccessToken,
     isSignedIn: Boolean(customerAccessToken),
     actions: {
+      // Creates and sets the global customer access token.
       signIn: async (email, password) => {
-        const newToken = await createCustomerAccessToken()
-        dispatch({ type: 'SET_CUSTOMER_ACCESS_TOKEN', payload: newToken })
-        return newToken
+        const {
+          accessToken,
+          expiresAt,
+          ...rest
+        } = await createCustomerAccessToken()
+
+        dispatch({
+          type: 'SET_CUSTOMER_ACCESS_TOKEN',
+          payload: { accessToken, expiresAt },
+        })
+
+        return { accessToken, expiresAt, ...rest }
       },
+
+      // Renews and sets the global customer access token.
+      renewToken,
+
+      // Deletes the global customer access token and resets the global state.
       signOut: async (email, password) => {
         if (customerAccessToken)
           await deleteCustomerAccessToken(customerAccessToken)
         dispatch({ type: 'RESET' })
       },
-      renewToken: async () => {
-        const renewedToken = await renewCustomerAccessToken(customerAccessToken)
-        dispatch({ type: 'SET_CUSTOMER_ACCESS_TOKEN', payload: renewedToken })
-        return renewedToken
-      },
     },
-  }
+  })
 }
 
 /***
@@ -50,56 +78,51 @@ export const useShopifyAuth = () => {
  */
 export const useShopifyCheckout = () => {
   const [{ checkoutId }, dispatch] = useShopifyReducer()
+  const useShopifyCheckoutResult = useShopifyCheckoutLowLevel(checkoutId)
   const {
-    checkout,
-    error,
-    actions: { createCheckout, ...restActions },
-  } = useShopifyCheckout(checkoutId)
+    actions: { createCheckout },
+  } = useShopifyCheckoutResult
 
-  return {
-    checkout,
-    error,
+  return merge(useShopifyCheckoutResult, {
     actions: {
       // Creates and sets a new global checkout.
       createCheckout: async input => {
         const newCheckout = await createCheckout(input)
         dispatch({ type: 'SET_CHECKOUT_ID', payload: newCheckout.id })
       },
-      ...restActions,
     },
-  }
+  })
 }
 
 /***
  * useShopifyProductVariant
  */
 export const useShopifyProductVariant = (productId, variantId) => {
-  const [{ checkoutId, checkoutLineItems }, dispatch] = useShopifyReducer()
-  const useShopifyProductVariantResult = useShopifyProductVariant(
+  const [{ checkoutLineItems }, dispatch] = useShopifyReducer()
+  const useShopifyProductVariantResult = useShopifyProductVariantLowLevel(
     productId,
     variantId
   )
   const {
     actions: { lineItemsReplace },
-  } = useShopifyCheckout(checkoutId)
+  } = useShopifyCheckout()
 
-  // TODO: Need a proper merge. useShopifyProductVariantResult.actions will be
-  // overridden.
-  return {
-    ...useShopifyProductVariantResult,
+  return merge(useShopifyProductVariantResult, {
     actions: {
       // Adds the product variant to the global checkout.
       addToCheckout: async (quantity = 1, customAttributes) => {
         // TODO: Need a proper merge w/ quantity checking
         const newLineItem = { variantId, quantity, customAttributes }
-        const checkout = await lineItemsReplace([
-          ...checkoutLineItems,
-          newLineItem,
-        ])
-        // TODO: Get line items from checkout
-        const lineItems = []
+        const mergedLineItems = [...checkoutLineItems, newLineItem]
+        const checkout = await lineItemsReplace(mergedLineItems)
+
+        const lineItems = compose(
+          getNodes,
+          get('lineItems')
+        )(checkout)
+
         dispatch({ type: 'SET_CHECKOUT_LINE_ITEMS', payload: lineItems })
       },
     },
-  }
+  })
 }

@@ -4,6 +4,7 @@ import { ApolloProvider } from 'react-apollo-hooks'
 
 const initialState = {
   customerAccessToken: null,
+  customerAccessTokenExpiresAt: null,
   checkoutId: null,
   checkoutLineItems: [],
 }
@@ -16,7 +17,8 @@ const reducer = (state, action) => {
     case 'SET_CUSTOMER_ACCESS_TOKEN':
       return {
         ...reduced,
-        customerAccessToken: payload,
+        customerAccessToken: payload.accessToken,
+        customerAccessTokenExpiresAt: payload.expiresAt,
       }
 
     case 'SET_CHECKOUT_ID':
