@@ -40,52 +40,6 @@ export { useApolloClient as useShopifyApolloClient }
 export const useShopifyReducer = () => useContext(ReducerContext)
 
 /***
- * useShopifyAuth
- *
- * Manages customer authentication. It keeps the customer's access token in
- * local state for other hooks to utlize. The token is also provided via this
- * hook for arbitrary use.
- */
-export const useShopifyAuth = () => {
-  const [state, dispatch] = useShopifyReducer()
-  const mutationCustomerAccessTokenCreate = useMutation(
-    MutationCustomerAccessTokenCreate
-  )
-
-  return {
-    token: state.customerAccessToken,
-    isSignedIn: Boolean(state.customerAccessToken),
-
-    // Request a customer access token from Shopify and store it if successful.
-    signIn: async (email, password) => {
-      const result = await mutationCustomerAccessTokenCreate({
-        variables: {
-          input: {
-            email,
-            password,
-          },
-        },
-      })
-
-      const token = get(
-        'data.customerAccessTokenCreate.customerAccessToken.accessToken',
-        result
-      )
-
-      if (token) {
-        dispatch({ type: 'SET_CUSTOMER_ACCESS_TOKEN', payload: token })
-        return true
-      }
-
-      return false
-    },
-
-    // Reset to initial state.
-    signOut: () => dispatch({ type: 'SIGN_OUT' }),
-  }
-}
-
-/***
  * useShopifyProduct
  *
  * Provides product data for a given product ID.
