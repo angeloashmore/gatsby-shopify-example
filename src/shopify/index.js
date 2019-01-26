@@ -1,10 +1,17 @@
 export { ShopifyProvider } from './context'
 
 export {
-  useShopifyReducer,
   useShopifyCheckout,
-  // useShopifyCustomer,
+  useShopifyCustomer,
   useShopifyCustomerAccessToken,
   useShopifyProduct,
   useShopifyProductVariant,
 } from './hooks'
+
+export {
+  useShopifyReducer,
+  useShopifyCheckoutWithContext,
+  useShopifyCustomerWithContext,
+  useShopifyAuth,
+  useShopifyProductVariantWithContext,
+} from './hooksWithContext'
