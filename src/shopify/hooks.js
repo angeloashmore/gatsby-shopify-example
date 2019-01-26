@@ -7,6 +7,7 @@ import { ReducerContext } from './context'
 import { mutationResultNormalizer } from './mutationResultNormalizer'
 
 import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
+import { QueryCustomerNode } from './graphql/QueryCustomerNode'
 import { QueryProductNode } from './graphql/QueryProductNode'
 
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
