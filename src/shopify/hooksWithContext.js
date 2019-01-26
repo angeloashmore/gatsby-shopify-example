@@ -120,12 +120,9 @@ export const useShopifyCheckoutWithContext = (autoCreate = true) => {
  * useShopifyCheckout hooked up to global state. This provides convenient
  * global checkout-related functions.
  */
-export const useShopifyProductVariantWithContext = (productId, variantId) => {
+export const useShopifyProductVariantWithContext = variantId => {
   const [{ checkoutLineItems }, dispatch] = useShopifyReducer()
-  const useShopifyProductVariantResult = useShopifyProductVariant(
-    productId,
-    variantId
-  )
+  const useShopifyProductVariantResult = useShopifyProductVariant(variantId)
   const {
     actions: { lineItemsReplace },
   } = useShopifyCheckout()

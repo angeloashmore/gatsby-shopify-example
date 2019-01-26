@@ -1,12 +1,12 @@
 import { useApolloClient, useQuery, useMutation } from 'react-apollo-hooks'
-import { compose, get, find } from 'lodash/fp'
+import { get } from 'lodash/fp'
 
-import { getNodes } from './lib'
 import { mutationResultNormalizer } from './mutationResultNormalizer'
 
 import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
 import { QueryCustomer } from './graphql/QueryCustomer'
 import { QueryProductNode } from './graphql/QueryProductNode'
+import { QueryProductVariantNode } from './graphql/QueryProductVariantNode'
 
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
 import { MutationCustomerAccessTokenDelete } from './graphql/MutationCustomerAccessTokenDelete'
@@ -59,20 +59,14 @@ export const useShopifyProduct = id => {
 /***
  * useShopifyProductVariant
  *
- * Provides product variant data for a given product ID and variant ID. Note
- * that both product and variant ID is required to query data.
+ * Provides product variant data for a given variant ID.
  */
-export const useShopifyProductVariant = (productId, variantId) => {
-  const { product, error } = useShopifyProduct(productId)
+export const useShopifyProductVariant = id => {
+  const { data, error } = useQuery(QueryProductVariantNode, {
+    variables: { id },
+  })
 
-  return {
-    productVariant: compose(
-      find(['id', variantId]),
-      getNodes,
-      get('variants')
-    )(product),
-    error,
-  }
+  return { productVariant: get('node', data), error }
 }
 
 /***
@@ -149,7 +143,7 @@ export const useShopifyCheckout = checkoutId => {
   // Nodes
   const { data: checkoutData, error } = useQuery(QueryCheckoutNode, {
     variables: { id: checkoutId },
-    skip: Boolean(checkoutId),
+    skip: !Boolean(checkoutId),
   })
   const checkoutNode = get('node', checkoutData)
 
@@ -359,7 +353,7 @@ export const useShopifyCustomer = customerAccessToken => {
   // Nodes
   const { data: customerData, error } = useQuery(QueryCustomer, {
     variables: { customerAccessToken },
-    skip: Boolean(customerAccessToken),
+    skip: !Boolean(customerAccessToken),
   })
   const customerNode = get('node', customerData)
 

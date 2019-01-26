@@ -32,8 +32,7 @@ const ProductTemplate = ({ data }) => {
               boxStyle="lastNoMargin"
             >
               <ProductVariant
-                productId={get('shopifyId', product)}
-                variantId={get('shopifyId', variant)}
+                id={get('shopifyId', variant)}
                 title={get('title', variant)}
                 price={get('price', variant)}
               />
