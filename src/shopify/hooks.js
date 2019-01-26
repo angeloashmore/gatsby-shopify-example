@@ -4,15 +4,26 @@ import { compose, get, find, merge, isEmpty } from 'lodash/fp'
 
 import { getNodes } from './lib'
 import { ReducerContext } from './context'
-import { MutationCheckoutAttributesUpdateV2 } from './graphql/MutationCheckoutAttributesUpdateV2'
-import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
-import { MutationCheckoutCustomerAssociateV2 } from './graphql/MutationCheckoutCustomerAssociateV2'
+import { mutationResultNormalizer } from './mutationResultNormalizer'
+
+import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
+import { QueryProductNode } from './graphql/QueryProductNode'
+
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
 import { MutationCustomerAccessTokenDelete } from './graphql/MutationCustomerAccessTokenDelete'
 import { MutationCustomerAccessTokenRenew } from './graphql/MutationCustomerAccessTokenRenew'
-import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
-import { QueryProductNode } from './graphql/QueryProductNode'
-import { mutationResultNormalizer } from './mutationResultNormalizer'
+
+import { MutationCheckoutAttributesUpdateV2 } from './graphql/MutationCheckoutAttributesUpdateV2'
+import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
+import { MutationCheckoutCustomerAssociateV2 } from './graphql/MutationCheckoutCustomerAssociateV2'
+import { MutationCheckoutCustomerDisassociateV2 } from './graphql/MutationCheckoutCustomerDisassociateV2'
+import { MutationCheckoutDiscountCodeApplyV2 } from './graphql/MutationCheckoutDiscountCodeApplyV2'
+import { MutationCheckoutDiscountCodeRemove } from './graphql/MutationCheckoutDiscountCodeRemove'
+import { MutationCheckoutEmailUpdateV2 } from './graphql/MutationCheckoutEmailUpdateV2'
+import { MutationCheckoutGiftCardRemoveV2 } from './graphql/MutationCheckoutGiftCardRemoveV2'
+import { MutationCheckoutGiftCardsAppend } from './graphql/MutationCheckoutGiftCardsAppend'
+import { MutationCheckoutLineItemsReplace } from './graphql/MutationCheckoutLineItemsReplace'
+import { MutationCheckoutShippingLineUpdate } from './graphql/MutationCheckoutShippingLineUpdate'
 
 /***
  * useShopifyApolloClient
@@ -177,6 +188,33 @@ export const useShopifyCheckout = checkoutId => {
   const mutationCheckoutCustomerAssociateV2 = useMutation(
     MutationCheckoutCustomerAssociateV2
   )
+  const mutationCheckoutCustomerDisassociateV2 = useMutation(
+    MutationCheckoutCustomerDisassociateV2
+  )
+  const mutationCheckoutDiscountCodeApplyV2 = useMutation(
+    MutationCheckoutDiscountCodeApplyV2
+  )
+  const mutationCheckoutDiscountCodeRemove = useMutation(
+    MutationCheckoutDiscountCodeRemove
+  )
+  const mutationCheckoutEmailUpdateV2 = useMutation(
+    MutationCheckoutEmailUpdateV2
+  )
+  const mutationCheckoutGiftCardsAppend = useMutation(
+    MutationCheckoutGiftCardsAppend
+  )
+  const mutationCheckoutGiftCardRemoveV2 = useMutation(
+    MutationCheckoutGiftCardRemoveV2
+  )
+  const mutationCheckoutLineItemsReplace = useMutation(
+    MutationCheckoutLineItemsReplace
+  )
+  const mutationCheckoutShippingAddressUpdateV2 = useMutation(
+    MutationCheckoutShippingAddressUpdateV2
+  )
+  const mutationCheckoutShippingLineUpdate = useMutation(
+    MutationCheckoutShippingLineUpdate
+  )
 
   return {
     // All checkout data. Data updates on successful actions.
@@ -259,7 +297,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Update the checkout's email address.
       emailUpdate: async email => {
-        const result = await MutationCheckoutEmailUpdateV2({
+        const result = await mutationCheckoutEmailUpdateV2({
           variables: { checkoutId, email },
         })
 
@@ -272,7 +310,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Append gift card codes to the checkout.
       giftCardsAppend: async giftCardCodes => {
-        const result = await MutationCheckoutGiftCardsAppend({
+        const result = await mutationCheckoutGiftCardsAppend({
           variables: { checkoutId, giftCardCodes },
         })
 
@@ -285,7 +323,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Remove the gift card code from the checkout.
       giftCardRemove: async appliedGiftCardId => {
-        const result = await MutationCheckoutGiftCardRemoveV2({
+        const result = await mutationCheckoutGiftCardRemoveV2({
           variables: { checkoutId, appliedGiftCardId },
         })
 
@@ -298,7 +336,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Replace the checkout line items.
       lineItemsReplace: async lineItems => {
-        const result = await MutationCheckoutLineItemsReplace({
+        const result = await mutationCheckoutLineItemsReplace({
           variables: { checkoutId, lineItems },
         })
 
@@ -311,7 +349,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Update the checkout's shipping address.
       shippingAddressUpdate: async shippingAddress => {
-        const result = await MutationCheckoutShippingAddressUpdateV2({
+        const result = await mutationCheckoutShippingAddressUpdateV2({
           variables: { checkoutId, shippingAddress },
         })
 
@@ -324,7 +362,7 @@ export const useShopifyCheckout = checkoutId => {
 
       // Update the checkout's shipping line.
       shippingLineUpdate: async shippingRateHandle => {
-        const result = await MutationCheckoutShippingLineUpdate({
+        const result = await mutationCheckoutShippingLineUpdate({
           variables: { checkoutId, shippingRateHandle },
         })
 
