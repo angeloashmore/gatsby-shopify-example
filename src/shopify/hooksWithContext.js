@@ -2,19 +2,31 @@ import { merge } from 'lodash/fp'
 
 import { getNodes } from './lib'
 import { ReducerContext } from './context'
-import { useShopifyCustomerAccessToken } from './hooks'
+import {
+  useShopifyCheckout,
+  useShopifyCustomerAccessToken,
+  useShopifyProductVariant,
+  useShopifyReducer,
+} from './hooks'
 
 /***
  * useShopifyReducer
  *
- * Returns the local reducer used for managing client-side data.
+ * Returns the reducer used for managing global state.
  */
 export const useShopifyReducer = () => useContext(ReducerContext)
 
 /***
- * useShopifyAuth
+ * useShopifyCustomerAccessTokenWithContext
+ *
+ * useShopifyCustomerAccessToken hooked up to global state. Customer access
+ * tokens are stored in the global state to allow implicit access to the token
+ * in other hooks.
+ *
+ * If autoRenew is true, this hook will automatically renew the token if the
+ * saved token expires within 1 day.
  */
-export const useShopifyAuth = (autoRenew = true) => {
+export const useShopifyCustomerAccessTokenWithContext = (autoRenew = true) => {
   const [{ customerAccessToken }, dispatch] = useShopifyReducer()
   const useShopifyCustomerResult = useShopifyCustomer(customerAccessToken)
   const {
@@ -74,32 +86,41 @@ export const useShopifyAuth = (autoRenew = true) => {
 }
 
 /***
- * useShopifyCheckout
+ * useShopifyCheckoutWithContext
+ *
+ * useShopifyCheckout hooked up to global state. A single checkout is stored
+ * globally to allow implicit access to the checkout in other hooks.
  */
-export const useShopifyCheckout = () => {
+export const useShopifyCheckoutWithContext = (autoCreate = true) => {
   const [{ checkoutId }, dispatch] = useShopifyReducer()
-  const useShopifyCheckoutResult = useShopifyCheckoutLowLevel(checkoutId)
+  const useShopifyCheckoutResult = useShopifyCheckout(checkoutId)
   const {
     actions: { createCheckout },
   } = useShopifyCheckoutResult
 
+  // Creates and sets a new global checkout.
+  const createCheckout = async input => {
+    const newCheckout = await createCheckout(input)
+    dispatch({ type: 'SET_CHECKOUT_ID', payload: newCheckout.id })
+  }
+
   return merge(useShopifyCheckoutResult, {
     actions: {
       // Creates and sets a new global checkout.
-      createCheckout: async input => {
-        const newCheckout = await createCheckout(input)
-        dispatch({ type: 'SET_CHECKOUT_ID', payload: newCheckout.id })
-      },
+      createCheckout,
     },
   })
 }
 
 /***
- * useShopifyProductVariant
+ * useShopifyProductVariantWithContext
+ *
+ * useShopifyCheckout hooked up to global state. This provides convenient
+ * global checkout-related functions.
  */
-export const useShopifyProductVariant = (productId, variantId) => {
+export const useShopifyProductVariantWithContext = (productId, variantId) => {
   const [{ checkoutLineItems }, dispatch] = useShopifyReducer()
-  const useShopifyProductVariantResult = useShopifyProductVariantLowLevel(
+  const useShopifyProductVariantResult = useShopifyProductVariant(
     productId,
     variantId
   )
