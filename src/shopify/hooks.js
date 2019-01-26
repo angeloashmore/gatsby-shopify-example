@@ -1,13 +1,11 @@
-import { useContext } from 'react'
 import { useApolloClient, useQuery, useMutation } from 'react-apollo-hooks'
-import { compose, get, find, merge, isEmpty } from 'lodash/fp'
+import { compose, get, find } from 'lodash/fp'
 
 import { getNodes } from './lib'
-import { ReducerContext } from './context'
 import { mutationResultNormalizer } from './mutationResultNormalizer'
 
 import { QueryCheckoutNode } from './graphql/QueryCheckoutNode'
-import { QueryCustomerNode } from './graphql/QueryCustomerNode'
+import { QueryCustomer } from './graphql/QueryCustomer'
 import { QueryProductNode } from './graphql/QueryProductNode'
 
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
@@ -24,9 +22,12 @@ import { MutationCheckoutEmailUpdateV2 } from './graphql/MutationCheckoutEmailUp
 import { MutationCheckoutGiftCardRemoveV2 } from './graphql/MutationCheckoutGiftCardRemoveV2'
 import { MutationCheckoutGiftCardsAppend } from './graphql/MutationCheckoutGiftCardsAppend'
 import { MutationCheckoutLineItemsReplace } from './graphql/MutationCheckoutLineItemsReplace'
+import { MutationCheckoutShippingAddressUpdateV2 } from './graphql/MutationCheckoutShippingAddressUpdateV2'
 import { MutationCheckoutShippingLineUpdate } from './graphql/MutationCheckoutShippingLineUpdate'
 
 import { MutationCustomerActivate } from './graphql/MutationCustomerActivate'
+import { MutationCustomerAddressCreate } from './graphql/MutationCustomerAddressCreate'
+import { MutationCustomerAddressDelete } from './graphql/MutationCustomerAddressDelete'
 import { MutationCustomerAddressUpdate } from './graphql/MutationCustomerAddressUpdate'
 import { MutationCustomerCreate } from './graphql/MutationCustomerCreate'
 import { MutationCustomerDefaultAddressUpdate } from './graphql/MutationCustomerDefaultAddressUpdate'
@@ -48,12 +49,9 @@ export { useApolloClient as useShopifyApolloClient }
  * Provides product data for a given product ID.
  */
 export const useShopifyProduct = id => {
-  const { data, error } = useQuery(
-    QueryProductNode,
-    merge(options, {
-      variables: { id },
-    })
-  )
+  const { data, error } = useQuery(QueryProductNode, {
+    variables: { id },
+  })
 
   return { product: get('node', data), error }
 }
@@ -359,7 +357,7 @@ export const useShopifyCheckout = checkoutId => {
  */
 export const useShopifyCustomer = customerAccessToken => {
   // Nodes
-  const { data: customerData, error } = useQuery(QueryCustomerNode, {
+  const { data: customerData, error } = useQuery(QueryCustomer, {
     variables: { customerAccessToken },
     skip: Boolean(customerAccessToken),
   })

@@ -7,7 +7,7 @@ import { Flex, Text, Input } from 'system'
 import { Button } from 'src/components/Button'
 
 export const SignInForm = props => {
-  const [state, dispatch] = useShopifyReducer()
+  const [_, dispatch] = useShopifyReducer()
   const { createCustomerAccessToken } = useShopifyCustomerAccessToken()
 
   return (

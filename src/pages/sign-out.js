@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { navigate } from 'gatsby'
 
-import { useShopifyAuth } from 'src/shopify'
+import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
 import { Heading } from 'src/components/Heading'
 import { Layout } from 'src/components/Layout'
 
 const SignOutPage = props => {
-  const { signOut } = useShopifyAuth()
+  const { signOut } = useShopifyCustomerAccessTokenWithContext()
 
   useEffect(() => {
     signOut()

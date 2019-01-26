@@ -27,7 +27,7 @@ export const MutationCustomerAddressUpdate = gql`
     }
   }
 
-  ${FragmentCustomerAccessToken}
+  ${FragmentCustomerUserError}
   ${FragmentMailingAddress}
   ${FragmentUserError}
 `

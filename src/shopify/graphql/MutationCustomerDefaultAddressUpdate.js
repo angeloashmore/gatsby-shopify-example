@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost'
 
 import { FragmentCustomer } from './FragmentCustomer'
-import { FragmentCustomerUserError } from './FragmentCusterUserError'
+import { FragmentCustomerUserError } from './FragmentCustomerUserError'
 import { FragmentUserError } from './FragmentUserError'
 
 export const MutationCustomerDefaultAddressUpdate = gql`

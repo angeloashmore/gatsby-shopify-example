@@ -1,4 +1,5 @@
-import { merge } from 'lodash/fp'
+import { useContext } from 'react'
+import { compose, get, merge } from 'lodash/fp'
 
 import { getNodes } from './lib'
 import { ReducerContext } from './context'
@@ -7,7 +8,6 @@ import {
   useShopifyCustomer,
   useShopifyCustomerAccessToken,
   useShopifyProductVariant,
-  useShopifyReducer,
 } from './hooks'
 
 /***

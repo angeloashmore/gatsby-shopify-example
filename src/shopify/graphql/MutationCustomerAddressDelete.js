@@ -16,6 +16,6 @@ export const MutationCustomerAddressDelete = gql`
     }
   }
 
-  ${FragmentCustomerAccessToken}
+  ${FragmentCustomerUserError}
   ${FragmentUserError}
 `

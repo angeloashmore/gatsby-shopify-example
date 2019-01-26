@@ -9,9 +9,9 @@ export {
 } from './hooks'
 
 export {
-  useShopifyReducer,
   useShopifyCheckoutWithContext,
+  useShopifyCustomerAccessTokenWithContext,
   useShopifyCustomerWithContext,
-  useShopifyAuth,
   useShopifyProductVariantWithContext,
+  useShopifyReducer,
 } from './hooksWithContext'

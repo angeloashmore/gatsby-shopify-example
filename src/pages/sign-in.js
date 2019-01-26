@@ -1,12 +1,12 @@
 import React, { Suspense, useEffect } from 'react'
 import { navigate } from 'gatsby'
 
-import { useShopifyAuth } from 'src/shopify'
+import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
 import { Layout } from 'src/components/Layout'
 import { SignInForm } from 'src/components/SignInForm'
 
 const SignInPage = () => {
-  const { isSignedIn } = useShopifyAuth()
+  const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
 
   useEffect(
     () => {

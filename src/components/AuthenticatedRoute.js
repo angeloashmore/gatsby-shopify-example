@@ -1,10 +1,10 @@
 import React from 'react'
 
 import { Redirect } from 'src/components/Redirect'
-import { useShopifyAuth } from 'src/shopify'
+import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
 
 export const AuthenticatedRoute = ({ to = '/sign-in/', ...props }) => {
-  const { isSignedIn } = useShopifyAuth()
+  const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
 
   return isSignedIn ? null : <Redirect to={to} />
 }
