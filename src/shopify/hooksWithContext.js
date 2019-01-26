@@ -4,6 +4,7 @@ import { getNodes } from './lib'
 import { ReducerContext } from './context'
 import {
   useShopifyCheckout,
+  useShopifyCustomer,
   useShopifyCustomerAccessToken,
   useShopifyProductVariant,
   useShopifyReducer,
@@ -57,12 +58,12 @@ export const useShopifyCustomerAccessTokenWithContext = (autoRenew = true) => {
     isSignedIn: Boolean(customerAccessToken),
     actions: {
       // Creates and sets the global customer access token.
-      signIn: async (email, password) => {
+      signIn: async (...args) => {
         const {
           accessToken,
           expiresAt,
           ...rest
-        } = await createCustomerAccessToken()
+        } = await createCustomerAccessToken(...args)
 
         dispatch({
           type: 'SET_CUSTOMER_ACCESS_TOKEN',
@@ -76,7 +77,7 @@ export const useShopifyCustomerAccessTokenWithContext = (autoRenew = true) => {
       renewToken,
 
       // Deletes the global customer access token and resets the global state.
-      signOut: async (email, password) => {
+      signOut: async () => {
         if (customerAccessToken)
           await deleteCustomerAccessToken(customerAccessToken)
         dispatch({ type: 'RESET' })
@@ -98,16 +99,17 @@ export const useShopifyCheckoutWithContext = (autoCreate = true) => {
     actions: { createCheckout },
   } = useShopifyCheckoutResult
 
+  // TODO: Add auto-create logic here.
   // Creates and sets a new global checkout.
-  const createCheckout = async input => {
-    const newCheckout = await createCheckout(input)
+  const createCheckoutWithContext = async (...args) => {
+    const newCheckout = await createCheckout(...args)
     dispatch({ type: 'SET_CHECKOUT_ID', payload: newCheckout.id })
   }
 
   return merge(useShopifyCheckoutResult, {
     actions: {
       // Creates and sets a new global checkout.
-      createCheckout,
+      createCheckout: createCheckoutWithContext,
     },
   })
 }
@@ -143,6 +145,63 @@ export const useShopifyProductVariantWithContext = (productId, variantId) => {
         )(checkout)
 
         dispatch({ type: 'SET_CHECKOUT_LINE_ITEMS', payload: lineItems })
+      },
+    },
+  })
+}
+
+/***
+ * useShopifyCustomerWithContext
+ *
+ * useShopifyCustomer hooked up to global state.
+ */
+export const useShopifyCustomerWithContext = () => {
+  const [{ customerAccessToken }, dispatch] = useShopifyReducer()
+  const useShopifyCustomerResult = useShopifyCustomer(customerAccessToken)
+  const {
+    actions: { activateCustomer, resetCustomer, resetCustomerByUrl },
+  } = useShopifyCustomerResult
+
+  return merge(useShopifyCustomerResult, {
+    actions: {
+      // Activates the customer and sets the global customer access token.
+      activateCustomer: async (...args) => {
+        const { accessToken, expiresAt, ...rest } = await activateCustomer(
+          ...args
+        )
+
+        dispatch({
+          type: 'SET_CUSTOMER_ACCESS_TOKEN',
+          payload: { accessToken, expiresAt },
+        })
+
+        return { accessToken, expiresAt, ...rest }
+      },
+
+      // Resets the customer and sets the global customer access token.
+      resetCustomer: async (...args) => {
+        const { accessToken, expiresAt, ...rest } = await resetCustomer(...args)
+
+        dispatch({
+          type: 'SET_CUSTOMER_ACCESS_TOKEN',
+          payload: { accessToken, expiresAt },
+        })
+
+        return { accessToken, expiresAt, ...rest }
+      },
+
+      // Resets the customer and sets the global customer access token.
+      resetCustomerByUrl: async (...args) => {
+        const { accessToken, expiresAt, ...rest } = await resetCustomerByUrl(
+          ...args
+        )
+
+        dispatch({
+          type: 'SET_CUSTOMER_ACCESS_TOKEN',
+          payload: { accessToken, expiresAt },
+        })
+
+        return { accessToken, expiresAt, ...rest }
       },
     },
   })
