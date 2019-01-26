@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo-hooks'
 const initialState = {
   customerAccessToken: null,
   checkoutId: null,
-  checkoutWebUrl: null,
+  checkoutLineItems: [],
 }
 
 const reducer = (state, action) => {
@@ -25,13 +25,13 @@ const reducer = (state, action) => {
         checkoutId: payload,
       }
 
-    case 'SET_CHECKOUT_WEB_URL':
+    case 'SET_CHECKOUT_LINE_ITEMS':
       return {
         ...reduced,
-        checkoutWebUrl: payload,
+        checkoutLineItems: payload,
       }
 
-    case 'SIGN_OUT':
+    case 'RESET':
       return initialState
 
     default:

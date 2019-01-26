@@ -32,15 +32,15 @@ const GlobalStyle = createGlobalStyle`
 `
 
 export const Layout = ({ children, ...props }) => {
-  const [checkout, { createCheckout }] = useShopifyCheckout()
+  // const [checkout, { createCheckout }] = useShopifyCheckout()
 
-  useEffect(
-    () => {
-      if (!checkout) createCheckout()
-      return
-    },
-    [checkout]
-  )
+  // useEffect(
+  //   () => {
+  //     if (!checkout) createCheckout()
+  //     return
+  //   },
+  //   [checkout]
+  // )
 
   return (
     <StaticQuery

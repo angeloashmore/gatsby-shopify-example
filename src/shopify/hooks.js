@@ -33,13 +33,6 @@ import { MutationCheckoutShippingLineUpdate } from './graphql/MutationCheckoutSh
 export { useApolloClient as useShopifyApolloClient }
 
 /***
- * useShopifyReducer
- *
- * Returns the local reducer used for managing client-side data.
- */
-export const useShopifyReducer = () => useContext(ReducerContext)
-
-/***
  * useShopifyProduct
  *
  * Provides product data for a given product ID.
@@ -92,31 +85,49 @@ export const useShopifyCustomerAccessToken = () => {
 
   return {
     // Create a new customer access token. Returns the token.
-    create: async (email, password) =>
-      await mutationCustomerAccessTokenCreate({
+    createCustomerAccessToken: async (email, password) => {
+      const result = await mutationCustomerAccessTokenCreate({
         variables: {
-          input: {
-            email,
-            password,
-          },
+          input: { email, password },
         },
-      }),
+      })
+
+      return mutationResultNormalizer(
+        'customerAccessTokenCreate',
+        'customerAccessToken',
+        result
+      )
+    },
 
     // Renew the customer access token. Returns the renewed token.
-    renew: async customerAccessToken =>
-      await mutationCustomerAccessTokenRenew({
+    renewCustomerAccessToken: async customerAccessToken => {
+      const result = await mutationCustomerAccessTokenRenew({
         variables: {
           customerAccessToken,
         },
-      }),
+      })
+
+      return mutationResultNormalizer(
+        'customerAccessTokenDelete',
+        'customerAccessToken',
+        result
+      )
+    },
 
     // Permanently delete the customer access token.
-    delete: async customerAccessToken =>
-      await mutationCustomerAccessTokenDelete({
+    deleteCustomerAccessToken: async customerAccessToken => {
+      const result = await mutationCustomerAccessTokenDelete({
         variables: {
           customerAccessToken,
         },
-      }),
+      })
+
+      return mutationResultNormalizer(
+        'customerAccessTokenDelete',
+        'deletedAccessToken',
+        result
+      )
+    },
   }
 }
 
