@@ -6,6 +6,7 @@ import { getNodes } from './lib'
 import { ReducerContext } from './context'
 import { MutationCheckoutAttributesUpdateV2 } from './graphql/MutationCheckoutAttributesUpdateV2'
 import { MutationCheckoutCreate } from './graphql/MutationCheckoutCreate'
+import { MutationCheckoutCustomerAssociateV2 } from './graphql/MutationCheckoutCustomerAssociateV2'
 import { MutationCustomerAccessTokenCreate } from './graphql/MutationCustomerAccessTokenCreate'
 import { MutationCustomerAccessTokenDelete } from './graphql/MutationCustomerAccessTokenDelete'
 import { MutationCustomerAccessTokenRenew } from './graphql/MutationCustomerAccessTokenRenew'
@@ -162,7 +163,7 @@ export const useShopifyCustomerAccessToken = () => {
  */
 export const useShopifyCheckout = checkoutId => {
   // Nodes
-  const { data: checkoutData } = useQuery(QueryCheckoutNode, {
+  const { data: checkoutData, error } = useQuery(QueryCheckoutNode, {
     variables: { id: checkoutId },
     skip: Boolean(checkoutId),
   })
@@ -172,6 +173,9 @@ export const useShopifyCheckout = checkoutId => {
   const mutationCheckoutCreate = useMutation(MutationCheckoutCreate)
   const mutationCheckoutAttributesUpdateV2 = useMutation(
     MutationCheckoutAttributesUpdateV2
+  )
+  const mutationCheckoutCustomerAssociateV2 = useMutation(
+    MutationCheckoutCustomerAssociateV2
   )
 
   return {
@@ -186,9 +190,7 @@ export const useShopifyCheckout = checkoutId => {
       // Create a new checkout.
       createCheckout: async input => {
         const result = await mutationCheckoutCreate({
-          variables: {
-            input,
-          },
+          variables: { input },
         })
 
         return mutationResultNormalizer('checkoutCreate', 'checkout', result)
@@ -197,13 +199,140 @@ export const useShopifyCheckout = checkoutId => {
       // Update the checkout attributes.
       attributesUpdate: async input => {
         const result = await mutationCheckoutAttributesUpdateV2({
-          variables: {
-            checkoutId,
-            input,
-          },
+          variables: { checkoutId, input },
         })
 
         return mutationResultNormalizer('checkoutUpdate', 'checkout', result)
+      },
+
+      // Associate the checkout to a customer.
+      customerAssociate: async customerAccessToken => {
+        const result = await mutationCheckoutCustomerAssociateV2({
+          variables: { checkoutId, customerAccessToken },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutCustomerAssociateV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Disssociate the checkout from any customer.
+      customerDisassociate: async () => {
+        const result = await mutationCheckoutCustomerDisassociateV2({
+          variables: { checkoutId },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutCustomerDisassociateV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Apply a discount code to the checkout.
+      discountCodeApply: async discountCode => {
+        const result = await mutationCheckoutDiscountCodeApplyV2({
+          variables: { checkoutId, discountCode },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutDiscountCodeApplyV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Remove any discount code from the checkout.
+      discountCodeRemove: async () => {
+        const result = await mutationCheckoutDiscountCodeRemove({
+          variables: { checkoutId },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutDiscountCodeRemove',
+          'checkout',
+          result
+        )
+      },
+
+      // Update the checkout's email address.
+      emailUpdate: async email => {
+        const result = await MutationCheckoutEmailUpdateV2({
+          variables: { checkoutId, email },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutEmailUpdateV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Append gift card codes to the checkout.
+      giftCardsAppend: async giftCardCodes => {
+        const result = await MutationCheckoutGiftCardsAppend({
+          variables: { checkoutId, giftCardCodes },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutGiftCardsAppend',
+          'checkout',
+          result
+        )
+      },
+
+      // Remove the gift card code from the checkout.
+      giftCardRemove: async appliedGiftCardId => {
+        const result = await MutationCheckoutGiftCardRemoveV2({
+          variables: { checkoutId, appliedGiftCardId },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutGiftCardRemoveV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Replace the checkout line items.
+      lineItemsReplace: async lineItems => {
+        const result = await MutationCheckoutLineItemsReplace({
+          variables: { checkoutId, lineItems },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutLineItemsReplace',
+          'checkout',
+          result
+        )
+      },
+
+      // Update the checkout's shipping address.
+      shippingAddressUpdate: async shippingAddress => {
+        const result = await MutationCheckoutShippingAddressUpdateV2({
+          variables: { checkoutId, shippingAddress },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutShippingAddressUpdateV2',
+          'checkout',
+          result
+        )
+      },
+
+      // Update the checkout's shipping line.
+      shippingLineUpdate: async shippingRateHandle => {
+        const result = await MutationCheckoutShippingLineUpdate({
+          variables: { checkoutId, shippingRateHandle },
+        })
+
+        return mutationResultNormalizer(
+          'checkoutShippingLineUpdate',
+          'checkout',
+          result
+        )
       },
     },
   }

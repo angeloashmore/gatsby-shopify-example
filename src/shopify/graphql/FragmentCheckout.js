@@ -1,29 +1,10 @@
 import { gql } from 'apollo-boost'
 
 import { FragmentDiscountApplication } from './FragmentDiscountApplication'
+import { FragmentMailingAddress } from './FragmentMailingAddress'
 import { FragmentProductVariantWithProduct } from './FragmentProductVariantWithProduct'
 
 export const FragmentCheckout = gql`
-  fragment FragmentMailingAddress on MailingAddress {
-    id
-    address1
-    address2
-    city
-    company
-    country
-    firstName
-    formatted
-    lastName
-    latitude
-    longitude
-    phone
-    province
-    zip
-    name
-    countryCode: countryCodeV2
-    provinceCode
-  }
-
   fragment FragmentCheckout on Checkout {
     id
     ready
@@ -133,5 +114,6 @@ export const FragmentCheckout = gql`
   }
 
   ${FragmentDiscountApplication}
+  ${FragmentMailingAddress}
   ${FragmentProductVariantWithProduct}
 `
