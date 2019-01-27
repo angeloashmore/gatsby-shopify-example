@@ -2,7 +2,10 @@ import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
 import { get, compose, size } from 'lodash/fp'
 
-import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
+import {
+  useShopifyCustomerAccessTokenWithContext,
+  useShopifyCustomerWithContext,
+} from 'src/shopify'
 import { Flex, Box, Heading, Text, Link } from 'system'
 
 const NavItem = ({ to, children, ...props }) => (
@@ -21,6 +24,7 @@ const NavItem = ({ to, children, ...props }) => (
 
 export const Header = ({ checkoutLocal, checkout, ...props }) => {
   const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
+  const { customer } = useShopifyCustomerWithContext()
 
   return (
     <StaticQuery
@@ -62,7 +66,9 @@ export const Header = ({ checkoutLocal, checkout, ...props }) => {
               </NavItem>
               {isSignedIn ? (
                 <>
-                  <NavItem to="/account/">Account</NavItem>
+                  <NavItem to="/account/">
+                    Account ({get('displayName', customer)})
+                  </NavItem>
                   <NavItem to="/sign-out/">Sign Out</NavItem>
                 </>
               ) : (

@@ -6,7 +6,7 @@ import { AccountNav } from 'src/components/AccountNav'
 import { Layout } from 'src/components/Layout'
 
 export const AccountLayout = ({ children, ...props }) => {
-  useAuthenticatedRoute()
+  // useAuthenticatedRoute()
 
   return (
     <Layout {...props}>

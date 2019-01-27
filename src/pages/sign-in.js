@@ -5,7 +5,7 @@ import { Layout } from 'src/components/Layout'
 import { SignInForm } from 'src/components/SignInForm'
 
 const SignInPage = () => {
-  useUnauthenticatedRoute()
+  // useUnauthenticatedRoute()
 
   return (
     <Layout>

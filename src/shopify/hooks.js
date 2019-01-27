@@ -382,7 +382,7 @@ export const useShopifyCustomer = customerAccessToken => {
     variables: { customerAccessToken },
     skip: !Boolean(customerAccessToken),
   })
-  const customerNode = get('node', customerData)
+  const customerNode = get('customer', customerData)
 
   // Mutations
   const mutationCustomerActivate = useMutation(MutationCustomerActivate)
