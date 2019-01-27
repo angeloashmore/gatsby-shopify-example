@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense } from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
@@ -52,7 +52,7 @@ export const Layout = ({ children, ...props }) => {
             <html lang="en" />
           </Helmet>
           <SystemProvider theme={theme}>
-            <Suspense fallback="Loading&hellip;">
+            <>
               <GlobalStyle />
               <Text
                 as="div"
@@ -62,14 +62,16 @@ export const Layout = ({ children, ...props }) => {
                 fontWeight="medium"
                 lineHeight="copy"
               >
-                <ShopifyReducerViewer />
-                <Box p={[2, 4]}>
-                  <Header />
-                  <Box as="main">{children}</Box>
-                  <Footer />
-                </Box>
+                <Suspense fallback="Loading&hellip;">
+                  <ShopifyReducerViewer />
+                  <Box p={[2, 4]}>
+                    <Header />
+                    <Box as="main">{children}</Box>
+                    <Footer />
+                  </Box>
+                </Suspense>
               </Text>
-            </Suspense>
+            </>
           </SystemProvider>
         </>
       )}

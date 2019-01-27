@@ -27,7 +27,7 @@ export const SignInForm = props => {
 
   const onSubmit = async ({ email, password }, { setSubmitting }) => {
     setError(null)
-    const { data, errors } = await signIn(email, password)
+    const { errors } = await signIn(email, password)
     if (errors) setError(get('[0].message', errors))
     setSubmitting(false)
   }
