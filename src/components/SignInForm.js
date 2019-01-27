@@ -1,54 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { object as yupObject, string as yupString } from 'yup'
+import { get } from 'lodash/fp'
 
-import { useShopifyReducer, useShopifyCustomerAccessToken } from 'src/shopify'
-import { Flex, Text, Input } from 'system'
+import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
+import { Box, Flex, Text, Input } from 'system'
 import { Button } from 'src/components/Button'
 
+const initialValues = {
+  email: '',
+  password: '',
+}
+
+const validationSchema = yupObject().shape({
+  email: yupString()
+    .email()
+    .required(),
+  password: yupString().required(),
+})
+
 export const SignInForm = props => {
-  const [_, dispatch] = useShopifyReducer()
-  const { createCustomerAccessToken } = useShopifyCustomerAccessToken()
+  const [error, setError] = useState(null)
+  const {
+    actions: { signIn },
+  } = useShopifyCustomerAccessTokenWithContext()
+
+  const onSubmit = async ({ email, password }, { setSubmitting }) => {
+    setError(null)
+    const { data, errors } = await signIn(email, password)
+    if (errors) setError(get('[0].message', errors))
+    setSubmitting(false)
+  }
 
   return (
-    <Formik
-      initialValues={{
-        email: '',
-        password: '',
-      }}
-      validationSchema={yupObject().shape({
-        email: yupString()
-          .email()
-          .required(),
-        password: yupString().required(),
-      })}
-      onSubmit={async ({ email, password }, { setSubmitting }) => {
-        const token = await createCustomerAccessToken(email, password)
-        dispatch({ type: 'SET_CUSTOMER_ACCESS_TOKEN', payload: token })
-        setSubmitting(false)
-      }}
-    >
-      {({ isValid, isSubmitting }) => (
-        <Form {...props}>
-          <Flex as="label" mb={2}>
-            <Text width="6rem">Email</Text>
-            <Input as={Field} name="email" type="email" />
-            <Text ml={2}>
-              <ErrorMessage name="email" />
-            </Text>
-          </Flex>
-          <Flex as="label" mb={2}>
-            <Text width="6rem">Password</Text>
-            <Input as={Field} name="password" type="password" />
-            <Text ml={2}>
-              <ErrorMessage name="password" />
-            </Text>
-          </Flex>
-          <Button type="submit" disabled={!isValid || isSubmitting} ml="6rem">
-            Sign In
-          </Button>
-        </Form>
-      )}
-    </Formik>
+    <Box {...props}>
+      {error && <Text color="red">{error}</Text>}
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {({ isValid, isSubmitting }) => (
+          <Box as={Form}>
+            <Flex as="label" mb={2}>
+              <Text width="6rem">Email</Text>
+              <Input as={Field} name="email" type="email" />
+              <Text ml={2}>
+                <ErrorMessage name="email" />
+              </Text>
+            </Flex>
+            <Flex as="label" mb={2}>
+              <Text width="6rem">Password</Text>
+              <Input as={Field} name="password" type="password" />
+              <Text ml={2}>
+                <ErrorMessage name="password" />
+              </Text>
+            </Flex>
+            <Button type="submit" disabled={!isValid || isSubmitting} ml="6rem">
+              Sign In
+            </Button>
+          </Box>
+        )}
+      </Formik>
+    </Box>
   )
 }

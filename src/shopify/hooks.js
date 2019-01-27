@@ -1,4 +1,11 @@
-import { useApolloClient, useQuery, useMutation } from 'react-apollo-hooks'
+import React from 'react'
+import ApolloClient from 'apollo-boost'
+import {
+  ApolloProvider,
+  useApolloClient,
+  useQuery,
+  useMutation,
+} from 'react-apollo-hooks'
 import { get } from 'lodash/fp'
 
 import { mutationResultNormalizer } from './mutationResultNormalizer'
@@ -35,6 +42,26 @@ import { MutationCustomerRecover } from './graphql/MutationCustomerRecover'
 import { MutationCustomerReset } from './graphql/MutationCustomerReset'
 import { MutationCustomerResetByUrl } from './graphql/MutationCustomerResetByUrl'
 import { MutationCustomerUpdate } from './graphql/MutationCustomerUpdate'
+
+/***
+ * ShopifyProvider
+ *
+ * Root context provider to allow Apollo to communicate with Shopify.
+ */
+export const ShopifyProvider = ({
+  children,
+  shopName,
+  storefrontAccessToken,
+}) => {
+  const apolloClient = new ApolloClient({
+    uri: `https://${shopName}.myshopify.com/api/graphql`,
+    headers: {
+      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+    },
+  })
+
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
+}
 
 /***
  * useShopifyApolloClient
@@ -193,7 +220,7 @@ export const useShopifyCheckout = checkoutId => {
     // Collection of functions related to the product variant.
     actions: {
       // Create a new checkout.
-      createCheckout: async input => {
+      createCheckout: async (input = {}) => {
         const result = await mutationCheckoutCreate({
           variables: { input },
         })

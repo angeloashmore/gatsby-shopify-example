@@ -1,6 +1,7 @@
 import { gql } from 'apollo-boost'
 
 import { FragmentCustomerAccessToken } from './FragmentCustomerAccessToken'
+import { FragmentCustomerUserError } from './FragmentCustomerUserError'
 import { FragmentUserError } from './FragmentUserError'
 
 export const MutationCustomerAccessTokenCreate = gql`
@@ -12,9 +13,13 @@ export const MutationCustomerAccessTokenCreate = gql`
       customerAccessToken {
         ...FragmentCustomerAccessToken
       }
+      customerUserErrors {
+        ...FragmentCustomerUserError
+      }
     }
   }
 
   ${FragmentCustomerAccessToken}
+  ${FragmentCustomerUserError}
   ${FragmentUserError}
 `

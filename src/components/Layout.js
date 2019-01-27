@@ -4,11 +4,12 @@ import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
 import { get } from 'lodash/fp'
 
-import { useShopifyCheckout } from 'src/shopify'
+import { useShopifyCheckoutWithContext } from 'src/shopify'
 import { theme } from 'src/theme'
 import { SystemProvider, Box, Text } from 'system'
-import { Header } from 'src/components/Header'
 import { Footer } from 'src/components/Footer'
+import { Header } from 'src/components/Header'
+import { ShopifyReducerViewer } from 'src/components/ShopifyReducerViewer'
 
 import 'minireset.css'
 import 'inter-ui'
@@ -32,15 +33,7 @@ const GlobalStyle = createGlobalStyle`
 `
 
 export const Layout = ({ children, ...props }) => {
-  // const [checkout, { createCheckout }] = useShopifyCheckout()
-
-  // useEffect(
-  //   () => {
-  //     if (!checkout) createCheckout()
-  //     return
-  //   },
-  //   [checkout]
-  // )
+  useShopifyCheckoutWithContext()
 
   return (
     <StaticQuery
@@ -68,11 +61,13 @@ export const Layout = ({ children, ...props }) => {
                 fontSize="normal"
                 fontWeight="medium"
                 lineHeight="copy"
-                p={[2, 4]}
               >
-                <Header />
-                <Box as="main">{children}</Box>
-                <Footer />
+                <ShopifyReducerViewer />
+                <Box p={[2, 4]}>
+                  <Header />
+                  <Box as="main">{children}</Box>
+                  <Footer />
+                </Box>
               </Text>
             </Suspense>
           </SystemProvider>

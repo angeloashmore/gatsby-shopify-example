@@ -1,21 +1,25 @@
-import { curry, get, isEmpty } from 'lodash/fp'
+import { curry, get, isEmpty, has } from 'lodash/fp'
 
+// Returns a normalized result from a mutation call to ensure data and errors
+// are returned in an expected shape.
 export const mutationResultNormalizer = curry(
   (rootPath = '', resourcePath = '', result) => {
-    const root = get(rootPath, result)
+    const root = get(['data', rootPath], result)
 
-    const checkoutUserErrors = get('checkoutUserErrors', root)
-    if (!isEmpty(checkoutUserErrors))
-      throw new Error(JSON.stringify(checkoutUserErrors))
+    // Different mutations use different error names, so normalize to a single
+    // name.
+    const errors =
+      root.checkoutUserErrors ||
+      root.customerUserErrors ||
+      root.userErrors ||
+      []
 
-    const customerUserErrors = get('customerUserErrors', root)
-    if (!isEmpty(customerUserErrors))
-      throw new Error(JSON.stringify(customerUserErrors))
+    // If the resource path is present, return that data. If not, return true
+    // if no errors, false otherwise.
+    const data = has(resourcePath, root)
+      ? get(resourcePath, root)
+      : isEmpty(errors)
 
-    const userErrors = get('userErrors', root)
-    if (!isEmpty(userErrors)) throw new Error(JSON.stringify(userErrors))
-
-    // If no resource path is given, return true to signal success.
-    return resourcePath ? get(resourcePath, root) : true
+    return { data, errors }
   }
 )

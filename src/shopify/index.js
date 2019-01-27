@@ -1,6 +1,5 @@
-export { ShopifyProvider } from './context'
-
 export {
+  ShopifyProvider,
   useShopifyCheckout,
   useShopifyCustomer,
   useShopifyCustomerAccessToken,
@@ -9,6 +8,7 @@ export {
 } from './hooks'
 
 export {
+  ShopifyProviderWithContext,
   useShopifyCheckoutWithContext,
   useShopifyCustomerAccessTokenWithContext,
   useShopifyCustomerWithContext,

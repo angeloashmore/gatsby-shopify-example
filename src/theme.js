@@ -11,6 +11,7 @@ export const theme = {
   },
   fonts: {
     sans: '"Inter UI", sans-serif',
+    mono: 'monospace',
   },
   fontSizes: {
     xtiny: '0.6rem',

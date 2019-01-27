@@ -1,19 +1,11 @@
-import React, { Suspense, useEffect } from 'react'
-import { navigate } from 'gatsby'
+import React, { Suspense } from 'react'
 
-import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
+import { useUnauthenticatedRoute } from 'src/hooks'
 import { Layout } from 'src/components/Layout'
 import { SignInForm } from 'src/components/SignInForm'
 
 const SignInPage = () => {
-  const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
-
-  useEffect(
-    () => {
-      if (isSignedIn) navigate('/account/')
-    },
-    [isSignedIn]
-  )
+  useUnauthenticatedRoute()
 
   return (
     <Layout>
