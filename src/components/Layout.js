@@ -9,7 +9,6 @@ import { theme } from 'src/theme'
 import { SystemProvider, Box, Text } from 'system'
 import { Footer } from 'src/components/Footer'
 import { Header } from 'src/components/Header'
-import { ShopifyReducerViewer } from 'src/components/ShopifyReducerViewer'
 
 import 'minireset.css'
 import 'inter-ui'
@@ -21,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${p => p.theme.colors.cream};
+    background-color: ${p => p.theme.colors.white};
     overflow-x: hidden;
   }
 
@@ -32,7 +31,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-export const Layout = ({ children, ...props }) => {
+export const Layout = props => {
   useShopifyCheckoutWithContext()
 
   return (
@@ -42,33 +41,37 @@ export const Layout = ({ children, ...props }) => {
           site {
             siteMetadata {
               title
+              description
             }
           }
         }
       `}
       render={queryData => (
         <>
-          <Helmet title={get('site.siteMetadata.title', queryData)}>
+          <Helmet
+            titleTemplate={`%s – ${get('site.siteMetadata.title', queryData)}`}
+            defaultTitle={get('site.siteMetadata.title', queryData)}
+          >
             <html lang="en" />
+            <meta
+              name="description"
+              content={get('site.siteMetadata.description', queryData)}
+            />
           </Helmet>
           <SystemProvider theme={theme}>
             <>
               <GlobalStyle />
               <Text
-                as="div"
                 color="black"
                 fontFamily="sans"
                 fontSize="normal"
-                fontWeight="medium"
+                fontWeight="normal"
                 lineHeight="copy"
               >
                 <Suspense fallback="Loading&hellip;">
-                  <ShopifyReducerViewer />
-                  <Box p={[2, 4]}>
-                    <Header />
-                    <Box as="main">{children}</Box>
-                    <Footer />
-                  </Box>
+                  <Header />
+                  <Box as="main" {...props} />
+                  <Footer />
                 </Suspense>
               </Text>
             </>

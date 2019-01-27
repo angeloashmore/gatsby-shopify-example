@@ -1,8 +1,15 @@
+import { range, zipObject } from 'lodash/fp'
+
+const ms = (v = 0, r = Math.sqrt(2)) => Math.round(10 * Math.pow(r, v)) / 10
+
 export const theme = {
   colors: {
-    black: '#000',
+    black: '#252525',
+    gray: '#616161',
+    grayExtraLight: '#f6f6f6',
+    grayLight: '#ebebeb',
+    orange: '#ef3c24',
     white: '#fff',
-    cream: '#f5f0ea',
   },
   lineHeights: {
     solid: 1,
@@ -11,16 +18,6 @@ export const theme = {
   },
   fonts: {
     sans: '"Inter UI", sans-serif',
-    mono: 'monospace',
   },
-  fontSizes: {
-    xtiny: '0.6rem',
-    tiny: '0.7rem',
-    small: '0.8rem',
-    normal: '1rem',
-    midLarge: '1.15rem',
-    large: '1.4rem',
-    xlarge: '1.75rem',
-    xxlarge: '2.25rem',
-  },
+  fontSizes: zipObject(range(-5, 10), range(-5, 10).map(x => ms(x / 2))),
 }

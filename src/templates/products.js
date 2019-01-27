@@ -1,9 +1,10 @@
 import React from 'react'
 import { graphql } from 'gatsby'
 import { get, map, compose } from 'lodash/fp'
+import { nodes } from 'helpers'
 
-import { nodes } from 'system/helpers'
 import { Flex, Heading, Text, Link } from 'system'
+
 import { Layout } from 'src/components/Layout'
 import { Product } from 'src/components/Product'
 

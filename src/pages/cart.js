@@ -13,7 +13,7 @@ const CartPage = props => {
     <Layout>
       <Heading>Cart</Heading>
       <Text>{checkout ? checkout.id : 'none'}</Text>
-      <Button as={Link} disabled={!checkout} to={checkout.webUrl}>
+      <Button as={Link} disabled={!checkout} to={get('webUrl', checkout)}>
         Checkout
       </Button>
     </Layout>
