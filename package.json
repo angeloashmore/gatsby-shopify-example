@@ -9,7 +9,8 @@
     "start": "npm run develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
-    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
     "@walltowall/gatsby-theme-ww-base": "^0.6.0",

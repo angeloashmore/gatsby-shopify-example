@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ApolloClient from 'apollo-boost'
 import {
   ApolloProvider,
@@ -43,6 +43,8 @@ import { MutationCustomerReset } from './graphql/MutationCustomerReset'
 import { MutationCustomerResetByUrl } from './graphql/MutationCustomerResetByUrl'
 import { MutationCustomerUpdate } from './graphql/MutationCustomerUpdate'
 
+const ShopifyApolloContext = React.createContext()
+
 /***
  * ShopifyProvider
  *
@@ -50,6 +52,7 @@ import { MutationCustomerUpdate } from './graphql/MutationCustomerUpdate'
  */
 export const ShopifyProvider = ({
   children,
+  client,
   shopName,
   storefrontAccessToken,
 }) => {
@@ -60,7 +63,11 @@ export const ShopifyProvider = ({
     },
   })
 
-  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
+  return (
+    <ShopifyApolloContext.Provider value={client || apolloClient}>
+      {children}
+    </ShopifyApolloContext.Provider>
+  )
 }
 
 /***
@@ -68,7 +75,7 @@ export const ShopifyProvider = ({
  *
  * Returns direct access to the Apollo client for arbitrary query execution.
  */
-export { useApolloClient as useShopifyApolloClient }
+export const useShopifyApolloClient = () => useContext(ShopifyApolloContext)
 
 /***
  * useShopifyProduct
@@ -76,11 +83,19 @@ export { useApolloClient as useShopifyApolloClient }
  * Provides product data for a given product ID.
  */
 export const useShopifyProduct = id => {
-  const { data, error } = useQuery(QueryProductNode, {
+  const client = useShopifyApolloClient()
+  const { data, ...rest } = client.query({
+    query: QueryProductNode,
     variables: { id },
   })
 
-  return { product: get('node', data), error }
+  return { product: get('node', data), ...rest }
+
+  // const { data, error } = useQuery(QueryProductNode, {
+  //   variables: { id },
+  // })
+
+  // return { product: get('node', data), error }
 }
 
 /***
