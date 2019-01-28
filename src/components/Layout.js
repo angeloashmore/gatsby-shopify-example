@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${p => p.theme.colors.white};
+    background-color: ${p => p.theme.colors.cream};
     overflow-x: hidden;
   }
 
@@ -65,8 +65,9 @@ export const Layout = props => {
                 color="black"
                 fontFamily="sans"
                 fontSize="normal"
-                fontWeight="normal"
+                fontWeight="medium"
                 lineHeight="copy"
+                p={[2, 4]}
               >
                 <Suspense fallback="Loading&hellip;">
                   <Header />
