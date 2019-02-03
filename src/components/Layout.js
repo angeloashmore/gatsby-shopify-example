@@ -7,6 +7,7 @@ import { get } from 'lodash/fp'
 
 import { theme } from 'src/theme'
 import { SystemProvider, Box, Text } from 'system'
+import { DevRefreshButton } from 'src/components/DevRefreshButton'
 import { Footer } from 'src/components/Footer'
 import { Header } from 'src/components/Header'
 
@@ -70,6 +71,7 @@ export const Layout = props => {
                 lineHeight="copy"
                 letterSpacing={-0.5}
               >
+                {process.env.NODE_ENV === 'development' && <DevRefreshButton />}
                 <Header />
                 <Box as="main" {...props} />
                 <Footer />

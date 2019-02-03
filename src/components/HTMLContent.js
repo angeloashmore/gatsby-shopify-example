@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { Box, Text, HTML } from 'system'
+import { Text, HTML } from 'system'
 
 export const HTMLContent = ({ children, html, map = {}, ...props }) => (
-  <Box {...props}>
+  <Text {...props}>
     {children || (
       <HTML
         html={html}
@@ -14,10 +14,10 @@ export const HTMLContent = ({ children, html, map = {}, ...props }) => (
           h4: ({ children, ...props }) => <h5 {...props}>{children}</h5>,
           h5: ({ children, ...props }) => <h6 {...props}>{children}</h6>,
           h6: ({ children, ...props }) => <h6 {...props}>{children}</h6>,
-          p: props => <Text {...props} />,
+          p: props => <Text as="p" mb={2} boxStyle="lastNoMargin" {...props} />,
           ...map,
         }}
       />
     )}
-  </Box>
+  </Text>
 )

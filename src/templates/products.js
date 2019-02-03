@@ -3,12 +3,12 @@ import { graphql } from 'gatsby'
 import { get, map, compose } from 'lodash/fp'
 import { nodes } from 'helpers'
 
-import { Flex, Heading, Text, Link } from 'system'
+import { Grid, Flex, Heading, Text, Link } from 'system'
 
 import { Layout } from 'src/components/Layout'
 import { Product } from 'src/components/Product'
 
-const ProductTemplate = ({ data, pageContext }) => {
+const ProductsTemplate = ({ data, pageContext }) => {
   const products = compose(
     nodes,
     get('allShopifyProduct')
@@ -16,20 +16,30 @@ const ProductTemplate = ({ data, pageContext }) => {
 
   return (
     <Layout>
-      <Heading mb={2}>Products</Heading>
-      {map(
-        product => (
-          <Product
-            key={get('id', product)}
-            handle={get('handle', product)}
-            title={get('title', product)}
-            descriptionHtml={get('descriptionHtml', product)}
-            mb={2}
-            boxStyle="lastNoMargin"
-          />
-        ),
-        products
-      )}
+      <Grid
+        gridTemplateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(4, 1fr)']}
+        gridColumnGap={2}
+        gridRowGap={2}
+        p={2}
+      >
+        {map(
+          product => (
+            <Product
+              key={get('id', product)}
+              handle={get('handle', product)}
+              title={get('title', product)}
+              price={`$${get('priceRange.maxVariantPrice.amount', product)}`}
+              imageFluid={get(
+                'images[0].localFile.childImageSharp.fluid',
+                product
+              )}
+              mb={2}
+              boxStyle="lastNoMargin"
+            />
+          ),
+          products
+        )}
+      </Grid>
       <Flex as="nav">
         {get('previousPagePath', pageContext) && (
           <Text
@@ -55,7 +65,7 @@ const ProductTemplate = ({ data, pageContext }) => {
   )
 }
 
-export default ProductTemplate
+export default ProductsTemplate
 
 export const query = graphql`
   query ProductsTemplate($skip: Int!, $limit: Int!) {
@@ -66,6 +76,23 @@ export const query = graphql`
           handle
           title
           descriptionHtml
+          images {
+            localFile {
+              childImageSharp {
+                fluid(maxWidth: 800, quality: 90) {
+                  ...GatsbyImageSharpFluid_withWebp
+                }
+              }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+            }
+            maxVariantPrice {
+              amount
+            }
+          }
         }
       }
     }

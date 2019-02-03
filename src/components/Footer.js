@@ -20,6 +20,16 @@ const NavItem = ({ to, children, ...props }) => (
   </Box>
 )
 
+const Sections = props => (
+  <Grid
+    gridColumnGap={2}
+    gridRowGap={2}
+    gridTemplateColumns={['1fr', null, 'repeat(4, 1fr)']}
+    mb={4}
+    {...props}
+  />
+)
+
 const Section = ({
   singleColumn = false,
   forceBorderTopAlways = false,
@@ -30,7 +40,7 @@ const Section = ({
     alignItems="start"
     borderColor="white"
     borderTop={forceBorderTopAlways ? 2 : [2, null, 0]}
-    gridColumnGap={4}
+    gridColumnGap={2}
     gridRowGap={[3, null, 2]}
     gridTemplateColumns={singleColumn ? '1fr' : ['repeat(2, 1fr)', null, '1fr']}
     pt={1}
@@ -39,13 +49,7 @@ const Section = ({
 )
 
 const Line = props => (
-  <Box
-    bg="white"
-    display={['none', null, 'block']}
-    gridColumn="1 / -1"
-    height={2}
-    {...props}
-  />
+  <Box bg="white" display={['none', null, 'block']} height={2} {...props} />
 )
 
 export const Footer = props => (
@@ -54,16 +58,11 @@ export const Footer = props => (
     bg="black"
     color="white"
     p={2}
-    pb={4}
     fontSize={['normal', 'large', 'small']}
     fontWeight="heavy"
   >
-    <Box height={2} bg="white" display={['none', null, 'block']} />
-    <Grid
-      gridTemplateColumns={['1fr', null, 'repeat(4, 1fr)']}
-      gridRowGap={4}
-      gridColumnGap={4}
-    >
+    <Line />
+    <Sections>
       <Section as="nav">
         <Subheading>Navigate</Subheading>
         <Box as="ul">
@@ -104,11 +103,13 @@ export const Footer = props => (
           Hamish Smyth
         </Text>
       </Section>
+    </Sections>
+    <Line />
+    <Sections>
       <Section
         gridColumn="1 / -1"
         gridTemplateColumns={['repeat(2, 1fr)', null, 'repeat(4, 1fr)']}
-        gridColumnGap={4}
-        forceBorderTopAlways={true}
+        gridColumnGap={2}
       >
         <Text
           as="nav"
@@ -136,6 +137,6 @@ export const Footer = props => (
           &copy; {new Date().getFullYear()} Standards Manual, LLC
         </Link>
       </Section>
-    </Grid>
+    </Sections>
   </Text>
 )

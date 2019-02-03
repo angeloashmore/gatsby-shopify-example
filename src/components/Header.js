@@ -57,7 +57,7 @@ export const Header = ({ checkoutLocal, checkout, ...props }) => {
       fontWeight="heavy"
       px={2}
     >
-      <Grid gridTemplateColumns="repeat(4, 1fr)" gridColumnGap={4}>
+      <Grid gridTemplateColumns="repeat(4, 1fr)" gridColumnGap={2}>
         <Link to="/">
           <Text
             as="h1"
@@ -79,7 +79,7 @@ export const Header = ({ checkoutLocal, checkout, ...props }) => {
             as="ul"
             height="100%"
             gridTemplateColumns="repeat(6, 1fr)"
-            gridColumnGap={4}
+            gridColumnGap={2}
           >
             <NavItem to="/titles/">Titles</NavItem>
             <NavItem to="/shop/">Shop</NavItem>
