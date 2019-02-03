@@ -1,19 +1,22 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { get } from 'lodash/fp'
+import { useShopifyProductVariantWithContext } from 'react-shopify-hooks'
 
-import { useShopifyProductVariantWithContext } from 'src/shopify'
 import { Box } from 'system'
 import { Button } from 'src/components/Button'
 
 const LiveAddToCartButton = ({ productVariantId, ...props }) => {
   const {
     productVariant,
+    loading,
     error,
     actions: { addToCheckout },
   } = useShopifyProductVariantWithContext(productVariantId)
 
   const isAvailable = get('available', productVariant)
   if (error) return error.message
+
+  if (loading) return 'Loading&hellip;'
 
   return (
     <Button onClick={() => addToCheckout()} disabled={!isAvailable} {...props}>
@@ -35,9 +38,7 @@ export const ProductVariant = ({
     <dl>
       <dt>Price</dt>
       <dd>${price}</dd>
-      <Suspense fallback="Loading&hellip;">
-        <LiveAddToCartButton productVariantId={id} />
-      </Suspense>
+      <LiveAddToCartButton productVariantId={id} />
     </dl>
   </Box>
 )

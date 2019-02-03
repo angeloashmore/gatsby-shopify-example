@@ -1,6 +1,6 @@
 import React from 'react'
+import { useShopifyReducer } from 'react-shopify-hooks'
 
-import { useShopifyReducer } from 'src/shopify'
 import { Text } from 'system'
 
 export const ShopifyReducerViewer = () => {

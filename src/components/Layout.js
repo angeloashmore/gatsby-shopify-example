@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
+import { useShopifyCheckoutWithContext } from 'react-shopify-hooks'
 import { get } from 'lodash/fp'
 
-import { useShopifyCheckoutWithContext } from 'src/shopify'
 import { theme } from 'src/theme'
 import { SystemProvider, Box, Text } from 'system'
 import { Footer } from 'src/components/Footer'
@@ -12,6 +12,7 @@ import { Header } from 'src/components/Header'
 
 import 'minireset.css'
 import 'inter-ui'
+import 'typeface-roboto-mono'
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -32,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
 `
 
 export const Layout = props => {
-  useShopifyCheckoutWithContext()
+  // useShopifyCheckoutWithContext()
 
   return (
     <StaticQuery
@@ -65,15 +66,13 @@ export const Layout = props => {
                 color="black"
                 fontFamily="sans"
                 fontSize="normal"
-                fontWeight="medium"
+                fontWeight="normal"
                 lineHeight="copy"
-                p={[2, 4]}
+                letterSpacing={-0.5}
               >
-                <Suspense fallback="Loading&hellip;">
-                  <Header />
-                  <Box as="main" {...props} />
-                  <Footer />
-                </Suspense>
+                <Header />
+                <Box as="main" {...props} />
+                <Footer />
               </Text>
             </>
           </SystemProvider>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
+import { useShopifyCustomerAccessTokenWithContext } from 'react-shopify-hooks'
 
-import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
 import { useAuthenticatedRoute } from 'src/hooks'
 import { Heading } from 'src/components/Heading'
 import { Layout } from 'src/components/Layout'

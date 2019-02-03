@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 
 import { Layout } from 'src/components/Layout'
 import { SignInForm } from 'src/components/SignInForm'
@@ -6,9 +6,7 @@ import { SignInForm } from 'src/components/SignInForm'
 const SignInPage = () => {
   return (
     <Layout>
-      <Suspense fallback="Loading&hellip;">
-        <SignInForm />
-      </Suspense>
+      <SignInForm />
     </Layout>
   )
 }

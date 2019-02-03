@@ -38,6 +38,12 @@ module.exports = {
       },
     },
     {
+      resolve: 'gatsby-plugin-compile-es6-packages',
+      options: {
+        modules: ['react-shopify-hooks'],
+      },
+    },
+    {
       resolve: 'gatsby-plugin-create-client-paths',
       options: {
         prefixes: ['/account/*'],

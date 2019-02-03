@@ -1,83 +1,100 @@
 import React from 'react'
-import { StaticQuery, graphql } from 'gatsby'
-import { get, compose, size } from 'lodash/fp'
+// import {
+//   useShopifyCustomerAccessTokenWithContext,
+//   useShopifyCustomerWithContext,
+// } from 'react-shopify-hooks'
+import { isPathActive } from 'helpers'
 
-import {
-  useShopifyCustomerAccessTokenWithContext,
-  useShopifyCustomerWithContext,
-} from 'src/shopify'
-import { Flex, Box, Heading, Text, Link } from 'system'
+import { useLocation } from 'src/hooks'
 
-const NavItem = ({ to, children, ...props }) => (
-  <Box
-    as="li"
-    display="inline-block"
-    mr={[2, 3]}
-    boxStyle="lastNoMargin"
-    {...props}
-  >
-    <Text as={Link} to={to} fontSize={['small', 'medium']}>
-      {children}
-    </Text>
-  </Box>
-)
+import { Box, Grid, Flex, Text, Link } from 'system'
 
-export const Header = ({ checkoutLocal, checkout, ...props }) => {
-  const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
-  const { customer } = useShopifyCustomerWithContext()
+const NavItem = ({ to, children, ...props }) => {
+  const location = useLocation()
+  const isActive = isPathActive(to, location)
 
   return (
-    <StaticQuery
-      query={graphql`
-        query {
-          site {
-            siteMetadata {
-              title
-            }
+    <Box
+      as="li"
+      borderColor={isActive ? 'accent' : 'transparent'}
+      borderTop={2}
+      {...props}
+    >
+      <Link
+        to={to}
+        display="block"
+        fontWeight="bold"
+        height="100%"
+        lineHeight="tight"
+        pt="calc(1rem - 2px)"
+        pb={2}
+        css={`
+          text-transform: lowercase;
+
+          &:hover {
+            color: ${p => p.theme.colors.gray};
           }
-        }
-      `}
-      render={queryData => (
-        <Flex
-          as="header"
-          alignItems={[null, 'flex-end']}
-          borderBottom="2px solid"
-          borderColor="black"
-          flexDirection={['column', 'row']}
-          justifyContent="space-between"
-          mb={[2, 3]}
-          pb={[2, 3]}
-          {...props}
-        >
-          <Heading as="h1" fontSize="large" fontWeight="normal" mb={[1, 0]}>
-            <Link to="/">{get('site.siteMetadata.title', queryData)}</Link>
-          </Heading>
-          <Flex as="nav">
-            <Box as="ul">
-              <NavItem to="/">Home</NavItem>
-              <NavItem to="/products/">Products</NavItem>
-              <NavItem to="/cart/">
-                Cart (
-                {compose(
-                  size,
-                  get('node.lineItems.edges')
-                )(checkout)}
-                )
-              </NavItem>
-              {isSignedIn ? (
-                <>
-                  <NavItem to="/account/">
-                    Account ({get('displayName', customer)})
-                  </NavItem>
-                  <NavItem to="/sign-out/">Sign Out</NavItem>
-                </>
-              ) : (
-                <NavItem to="/sign-in/">Sign In</NavItem>
-              )}
-            </Box>
-          </Flex>
+        `}
+      >
+        <Flex height="100%" alignItems="flex-end">
+          {children}
         </Flex>
-      )}
-    />
+      </Link>
+    </Box>
+  )
+}
+
+export const Header = ({ checkoutLocal, checkout, ...props }) => {
+  // const { isSignedIn } = useShopifyCustomerAccessTokenWithContext()
+  // const { customer } = useShopifyCustomerWithContext()
+
+  return (
+    <Text
+      as="header"
+      bg="black"
+      color="white"
+      fontSize={['normal', null, 'large']}
+      fontWeight="heavy"
+      px={2}
+    >
+      <Grid gridTemplateColumns="repeat(4, 1fr)" gridColumnGap={4}>
+        <Link to="/">
+          <Text
+            as="h1"
+            borderColor="accent"
+            borderTop={2}
+            fontWeight="inherit"
+            lineHeight="tight"
+            pb={2}
+            pt="calc(1rem - 2px)"
+            textStyle="lowercase"
+          >
+            Standards
+            <br />
+            Manual
+          </Text>
+        </Link>
+        <Box as="nav" gridColumn="span 3">
+          <Grid
+            as="ul"
+            height="100%"
+            gridTemplateColumns="repeat(6, 1fr)"
+            gridColumnGap={4}
+          >
+            <NavItem to="/titles/">Titles</NavItem>
+            <NavItem to="/shop/">Shop</NavItem>
+            <NavItem to="/visit/" display={['none', 'block']}>
+              Visit
+            </NavItem>
+            <NavItem to="/about/" display={['none', 'block']}>
+              About
+            </NavItem>
+            <NavItem to="/news/" display={['none', 'block']}>
+              News
+            </NavItem>
+          </Grid>
+        </Box>
+      </Grid>
+    </Text>
   )
 }

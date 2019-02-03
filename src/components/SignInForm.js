@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
+import { useShopifyCustomerAccessTokenWithContext } from 'react-shopify-hooks'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { object as yupObject, string as yupString } from 'yup'
 import { get } from 'lodash/fp'
 
-import { useShopifyCustomerAccessTokenWithContext } from 'src/shopify'
 import { Box, Flex, Text, Input } from 'system'
 import { Button } from 'src/components/Button'
 

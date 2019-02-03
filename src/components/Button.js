@@ -5,13 +5,12 @@ import { Button as ButtonBase } from 'system'
 export const Button = ({ disabled, ...props }) => (
   <ButtonBase
     disabled={disabled}
-    bg="black"
-    color="cream"
+    bg={disabled ? 'black' : 'accent'}
+    color="white"
     fontSize="normal"
-    fontWeight="medium"
+    fontWeight="heavy"
     px={2}
     py={1}
-    opacity={disabled ? 0.5 : 1}
     {...props}
   />
 )

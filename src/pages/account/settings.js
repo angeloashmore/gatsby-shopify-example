@@ -1,9 +1,9 @@
 import React from 'react'
+import { useShopifyCustomerWithContext } from 'react-shopify-hooks'
 
 import { Text } from 'system'
 import { AccountLayout } from 'src/components/AccountLayout'
 import { Subheading } from 'src/components/Subheading'
-import { useShopifyCustomerWithContext } from 'src/shopify'
 
 const AccountSettingsPage = ({ location }) => {
   const { customer } = useShopifyCustomerWithContext()
