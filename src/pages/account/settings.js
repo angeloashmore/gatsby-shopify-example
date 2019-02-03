@@ -1,12 +1,13 @@
 import React from 'react'
 import { useShopifyCustomerWithContext } from 'react-shopify-hooks'
+import { get } from 'lodash/fp'
 
 import { Text } from 'system'
 import { AccountLayout } from 'src/components/AccountLayout'
 import { Subheading } from 'src/components/Subheading'
 
 const AccountSettingsPage = ({ location }) => {
-  const { customer } = useShopifyCustomerWithContext()
+  const { customer, loading } = useShopifyCustomerWithContext()
 
   return (
     <AccountLayout>
@@ -22,7 +23,7 @@ const AccountSettingsPage = ({ location }) => {
         <tbody>
           <tr>
             <td>Name</td>
-            <td>{customer.displayName}</td>
+            <td>{get('displayName', customer)}</td>
           </tr>
         </tbody>
       </table>
